@@ -1,0 +1,8 @@
+  <ul class="tabs">
+    {{ '{% for li in list %}' }}
+        {{ "{% if li.id == entity.id %} <li class=\"active\"><a href=\"#\">{% else %}<li><a href=\"{{ path('" ~ route_name_prefix ~ "_show', { 'id': li.id }) }}\">{% endif %}{{ li }}</a></li>" }}
+    {{ '{% endfor %}' }}
+{%   if 'new' in actions %}
+    <li class="success"><a href="{{ "{{ path('page_new') }}" }}">+</a></li> 
+{%   endif %}
+  </ul>

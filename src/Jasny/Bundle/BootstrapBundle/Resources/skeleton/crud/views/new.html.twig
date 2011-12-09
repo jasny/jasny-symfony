@@ -1,0 +1,31 @@
+{{ "{% extends '" ~ bundle ~ ":bootstrap.html.twig' %}" }}
+{{ "{% form_theme form 'JasnyBootstrapBundle:Form:form_layout.html.twig' %}" }}
+
+{{ "{% block header %}" }}
+    <h1>{{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</h1>
+{{ "{% endblock %}" }}
+
+{{ "{% block body %}" }}    
+{% if 'index' not in actions %}
+<div class="tabbable">
+  {%- include 'views/others/list_tabs.html.twig' %}
+  
+  <div class="tab-content">
+{% endif %}
+    <section id="{{ route_name_prefix }}-details" class="entity-details new-entity">
+        {{ '{{ form_errors(form) }}' }}
+
+        <form class="horizontal-form" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+            {{ "{{ form_widget(form) }}" }}
+            
+            <div class="form-actions">
+                <button class="btn primary" type="submit">{{ 'Save'|trans }}</button>
+                <a href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}" class="btn">{{ 'Cancel'|trans }}</a>
+            </div>
+        </form>
+    </section>
+{% if 'index' not in actions %}
+  </div>
+</div>
+{% endif %}
+{{ "{% endblock %}" }}

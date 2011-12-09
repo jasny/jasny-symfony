@@ -1,0 +1,51 @@
+{{ "{% extends '" ~ bundle ~ ":bootstrap.html.twig' %}" }}
+{{ "{% form_theme form 'JasnyBootstrapBundle:Form:form_layout.html.twig' %}" }}
+
+{{ "{% block title %}" }}{{ entity_desc.singular|capitalize }}{% if stringable %} - {{ '{{ entity }}' }}{% endif %}{{ "{% endblock %}" }}
+
+{{ "{% block header %}" }}
+{% if stringable %}
+    <h1>{{ '{{ entity }}' }} <small>{{ 'Edit %s'|trans({'%s': entity_desc.singular})|capitalize }}</small></h1>
+{% else %}
+    <h1>{{ 'Edit %s'|trans({'%s': entity_desc.singular})|capitalize }}</h1>
+{% endif %}
+{{ "{% endblock %}" }}
+
+{{ "{% block body %}" }}    
+{% if 'index' not in actions %}
+<div class="tabbable">
+  {%- include 'others/list-tabs.html.twig' %}
+  
+  <div class="tab-content">
+{% endif %}
+    <section id="{{ route_name_prefix }}-details" class="entity-details edit-entity">
+
+        {{ '{{ form_errors(form) }}' }}
+
+        <form class="horizontal-form" action="{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': entity.id }) }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+            {{ "{{ form_widget(form) }}" }}
+            
+            <div class="form-actions">
+                <button class="btn primary" type="submit">{{ 'Save'|trans }}</button>
+{% if ('index' in actions) or ('show' in actions) %}
+                <a href="{{ "{{ path('"~ route_name_prefix ~ ('show' in actions ? "_show', { 'id': entity.id })" : "')") ~" }}" }}" class="btn">{{ 'Cancel'|trans }}</a>
+{% endif %}
+{% if ('delete' in actions) and ('show' not in actions) %}
+                
+                <a href="#" class="act danger icon delete pull-right" data-toggle="modal" data-target="#{{ route_name_prefix }}-delete-modal">{{ 'Delete %s'|trans({'%s': entity_desc.singular})|capitalize }}</a>
+{% endif %}
+            </div>
+        </form>
+
+{% if ('delete' in actions) and ('show' not in actions) %}
+
+        {%- set delete_js, delete_js = false, false %}
+        {%- include 'views/others/delete_modal.html.twig' %}
+
+{% endif %}
+    </section>
+{% if 'index' not in actions %}
+  </div>
+</div>
+{% endif %}
+{{ "{% endblock %}" }}
