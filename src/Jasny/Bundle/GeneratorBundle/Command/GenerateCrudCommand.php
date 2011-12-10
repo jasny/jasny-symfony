@@ -155,7 +155,7 @@ EOT
         }
         
         // navigation
-        if (!$input->isInteractive() || $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the navigation', 'yes', '?'), true)) {
+        if (!$input->isInteractive() || $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Navigation', 'yes', '?'), true)) {
             $output->write('Update navigation: ');
             try {
                 $baseviewGenerator->addToNavigation($bundle, $prefix, $entityDesc['plural']);
@@ -320,8 +320,6 @@ EOT
 
         $routing = new RoutingManipulator($bundle->getPath().'/Resources/config/routing.yml');
         $routing->addResource($bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity)));
-        
-        return true;
     }
 
     protected function getRoutePrefix(InputInterface $input, $entity)

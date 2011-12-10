@@ -1,5 +1,7 @@
-{{ "{% extends '" ~ bundle ~ ":bootstrap.html.twig' %}" }}
+{{ "{% extends '" ~ bundle ~ "::base.html.twig' %}" }}
 {{ "{% form_theme form 'JasnyBootstrapBundle:Form:form_layout.html.twig' %}" }}
+
+{{ "{% block title %}" }}{{ 'Edit %s%'|trans({ '%s%': entity_desc.singular})|capitalize }}{{ "{% endblock %}" }}
 
 {{ "{% block header %}" }}
     <h1>{{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</h1>

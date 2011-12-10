@@ -17,15 +17,26 @@
     
     private function displayNewView($entity, $form)
     {
+{% if 'index' not in actions %}
+        $em = $this->getDoctrine()->getEntityManager();
+        $list = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findAll();
+        
+{% endif %}    
 {% if 'annotation' == format %}
         return array(
             'entity' => $entity,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+{%     if 'index' not in actions %}
+            'list'   => $list,
+{%     endif %}
         );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+{%     if 'index' not in actions %}
+            'list'   => $list,
+{%     endif %}
         ));
 {% endif %}
     }

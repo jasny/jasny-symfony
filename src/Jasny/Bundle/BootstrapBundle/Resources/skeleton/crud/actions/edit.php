@@ -27,6 +27,7 @@
 {% if 'index' not in actions %}
         $em = $this->getDoctrine()->getEntityManager();
         $list = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findAll();
+        
 {% endif %}    
 {% if ('delete' in actions) and ('show' not in actions) %}
         $deleteForm = $this->createDeleteForm($entity->getId());

@@ -1,8 +1,8 @@
   <ul class="tabs">
     {{ '{% for li in list %}' }}
-        {{ "{% if li.id == entity.id %} <li class=\"active\"><a href=\"#\">{% else %}<li><a href=\"{{ path('" ~ route_name_prefix ~ "_show', { 'id': li.id }) }}\">{% endif %}{{ li }}</a></li>" }}
+        {{ "{% if li.id == entity.id %} <li class=\"active\"><a href=\"#\">{% else %}<li><a href=\"{{ path('" ~ route_name_prefix ~ ('show' in actions ? "_show" : "_edit") ~ "', { 'id': li.id }) }}\">{% endif %}{{ li }}</a></li>" }}
     {{ '{% endfor %}' }}
-{%   if 'new' in actions %}
-    <li class="success"><a href="{{ "{{ path('page_new') }}" }}">+</a></li> 
-{%   endif %}
+{% if 'new' in actions %}
+    {{ "{% if app.request.attributes.get('_route') == '" ~ route_name_prefix ~ "_new' %}<li class=\"success active\"><a href=\"#\">{% else %}<li class=\"success\"><a href=\"{{ path('" ~ route_name_prefix ~ "_new') }}\">{% endif %}" }}+</a></li>
+{% endif %}
   </ul>
