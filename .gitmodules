@@ -1,0 +1,6 @@
+[submodule "src/Jasny/Bundle/BootstrapBundle/Resources/public/bootstrap"]
+	path = src/Jasny/Bundle/BootstrapBundle/Resources/public/bootstrap
+	url = git://github.com/jasny/bootstrap.git
+[submodule "src/Jasny/Bundle/BootstrapBundle/Resources/public/ckeditor"]
+	path = src/Jasny/Bundle/BootstrapBundle/Resources/public/ckeditor
+	url = git://github.com/jasny/CKEditor.git
