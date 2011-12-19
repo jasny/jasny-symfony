@@ -48,9 +48,10 @@ abstract class GenerateCrudCommand extends GenerateDoctrineCommand
                 new InputOption('entity', '', InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)'),
                 new InputOption('bundle', '', InputOption::VALUE_REQUIRED, 'The target bundle to generate the controller and views in (shortcut notation)'),
                 new InputOption('route-prefix', '', InputOption::VALUE_REQUIRED, 'The route prefix'),
-                new InputOption('actions', '', InputOption::VALUE_REQUIRED, 'Which actions to create (options: list, show, new, edit and delete) ', $this->getDefaultActions()),
+                new InputOption('actions', '', InputOption::VALUE_REQUIRED, 'Which actions to create (options: list, show, new, edit and delete) ', join(',', (array)$this->getDefaultActions())),
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
                 new InputOption('lang', '', InputOption::VALUE_REQUIRED, 'Translate the template to this language'),
+                new InputOption('custom-form', '', InputOption::VALUE_NONE, 'Create a view for the form to allow customization'),
                 new InputOption('singular', '', InputOption::VALUE_REQUIRED, 'The description for a single entity'),
                 new InputOption('plural', '', InputOption::VALUE_REQUIRED, 'The description for multiple entities'),
             ))
@@ -92,6 +93,7 @@ EOT
         $language = $input->getOption('lang');
         if (!$language) $language = $this->getContainer()->get('session')->getLocale();
         
+        $customForm = $input->getOption('custom-form');
         $entityDesc = array('singular'=>$input->getOption('singular'), 'plural'=>$input->getOption('plural'));
         
         $actions = $input->getOption('actions');
@@ -131,7 +133,7 @@ EOT
 
         // CRUD
         $generator = $this->getGenerator();
-        $generator->generate($bundle, $entityBundle, $entity, $metadata[0], $format, $prefix, $actions, $entityDesc, $language);
+        $generator->generate($bundle, $entityBundle, $entity, $metadata[0], $format, $prefix, $actions, $customForm, $entityDesc, $language);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
 
@@ -211,7 +213,7 @@ EOT
         $this->getContainer()->get('kernel')->getBundle($bundle);
                 
         // show and write?
-        if ($this->getDefaultActions() == 'all') {
+        if ($this->getDefaultActions() === 'all') {
             $output->writeln(array(
                 '',
                 'By default, the all actions are generated: list, show, new, edit and delete.',
@@ -222,7 +224,7 @@ EOT
         } else {
             $output->writeln(array(
                 '',
-                'By default only the ' . $this->getDefaultActions() . (false === strpos($this->getDefaultActions(), ',') ? ' action is' : ' actions are') . ' generated.',
+                'By default only the following ' . (count($this->getDefaultActions()) == 1 ? 'action is' : 'actions are') . ' generated: ' . join(', ', $this->getDefaultActions()),
                 'However, you may specify which actions to generate (list, show, new, edit and delete).',
                 'Adding or omiting actions will influence views of other actions.',
                 '',
@@ -234,6 +236,21 @@ EOT
         $actions = $dialog->ask($output, $dialog->getQuestion('Which actions do you want to generate', $actions, '?'), $actions);
         $input->setOption('actions', $actions);
 
+        // custom form?
+        if (preg_match('/\b(' . join('|', $this->getFormActions()) . ')\b/', $actions) || ($this->getFormActions() != null && $actions == 'all')) {
+            $output->writeln(array(
+                '',
+                'Normally we output the whole form at once. However you may also choose',
+                'to create a customizable view for the form. This does mean that you need',
+                'to change the view manually if you add or remove fields.',
+                '',
+            ));
+
+            $customForm = $input->getOption('custom-form');
+            $customForm = $dialog->askConfirmation($output, $dialog->getQuestion('Do you want to create a customizable form view', $customForm ? 'yes' : 'no', '?'), $customForm);
+            $input->setOption('custom-form', $customForm);
+        }
+        
         // format
         $format = $input->getOption('format');
         $output->writeln(array(
@@ -403,6 +420,11 @@ EOT
           "<bg=yellow>  " . str_repeat(" ", strlen($msg)) . "  </>",
           ""
         ));
+    }
+
+    protected function getFormActions()
+    {
+        return array('new', 'edit');
     }
     
     abstract public function getResourcesDir();

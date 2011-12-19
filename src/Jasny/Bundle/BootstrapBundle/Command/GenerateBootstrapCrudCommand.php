@@ -51,4 +51,9 @@ EOT
     {
         return 'all';
     }
+
+    protected function getFormActions()
+    {
+        return array('show', 'new', 'edit');
+    }    
 }

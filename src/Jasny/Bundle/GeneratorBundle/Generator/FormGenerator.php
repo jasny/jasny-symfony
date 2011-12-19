@@ -82,29 +82,4 @@ class FormGenerator extends Generator
             'form_type_name'   => strtolower(str_replace('\\', '_', $bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.$this->className),
         ));
     }
-
-    /**
-     * Returns an array of fields. Fields can be both column fields and
-     * association fields.
-     *
-     * @param ClassMetadataInfo $metadata
-     * @return array $fields
-     */
-    private function getFieldsFromMetadata(ClassMetadataInfo $metadata)
-    {
-        $fields = $metadata->fieldMappings;
-
-        // Remove the primary key field if it's not managed manually
-        if (!$metadata->isIdentifierNatural()) {
-            unset($fields[reset($metadata->identifier)]);
-        }
-
-        foreach ($metadata->associationMappings as $fieldName => $relation) {
-            if ($relation['type'] !== ClassMetadataInfo::ONE_TO_MANY) {
-                $fields[$fieldName] = $relation;
-            }
-        }
-
-        return $fields;
-    }
 }

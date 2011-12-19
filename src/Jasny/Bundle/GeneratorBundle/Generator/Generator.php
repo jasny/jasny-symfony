@@ -16,6 +16,7 @@ use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
  * Generator is the base class, with translation functionality.
@@ -63,5 +64,39 @@ abstract class Generator extends BaseGenerator
     protected function getLanguage()
     {
         return null;
+    }
+
+    /**
+     * Returns an array of fields. Fields can be both column fields and
+     * association fields.
+     * 
+     *
+     * @param ClassMetadataInfo $metadata
+     * @return array $fields
+     */
+    protected function getFieldsFromMetadata(ClassMetadataInfo $metadata, $excludeType = array())
+    {
+        $fields = $metadata->fieldMappings;
+
+        // Remove the primary key field if it's not managed manually
+        if (!$metadata->isIdentifierNatural()) {
+            unset($fields[reset($metadata->identifier)]);
+        }
+
+        foreach ($metadata->associationMappings as $fieldName => $relation) {
+            if ($relation['type'] !== ClassMetadataInfo::ONE_TO_MANY) {
+                $fields[$fieldName] = $relation;
+            }
+        }
+       
+        if ($excludeType) {
+            foreach ($fields as $key=>&$field) {
+                if (in_array($field['type'], $excludeType)) unset($fields[$key]);
+            }
+        }
+        
+        unset($fields['created_at'], $fields['updated_at'], $fields['created_by'], $fields['updated_by']);
+
+        return $fields;
     }
 }

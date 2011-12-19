@@ -34,6 +34,7 @@ class CrudGenerator extends Generator
     private $metadata;
     private $format;
     private $actions;
+    private $customForm;
     private $entityDesc;
     private $stringable;
     private $triggerable;
@@ -66,11 +67,12 @@ class CrudGenerator extends Generator
      *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, BundleInterface $entityBundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $actions, $entityDesc, $language)
+    public function generate(BundleInterface $bundle, BundleInterface $entityBundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $actions, $customForm, $entityDesc, $language)
     {
         $this->routePrefix = $routePrefix;
         $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
         $this->actions = $actions;
+        $this->customForm = $customForm;
 
         if (count($metadata->identifier) > 1) {
             throw new \RuntimeException('The CRUD generator does not support entity classes with multiple primary keys.');
@@ -98,6 +100,11 @@ class CrudGenerator extends Generator
 
         if (!file_exists($dir)) {
             $this->filesystem->mkdir($dir, 0777);
+        }
+        
+        if ($this->customForm) {
+            if (!file_exists("$dir/includes")) $this->filesystem->mkdir("$dir/includes", 0777);
+            $this->generateCustomFormView($dir);
         }
 
         if (in_array('index', $this->actions)) {
@@ -237,33 +244,41 @@ class CrudGenerator extends Generator
     }
 
     /**
+     * Generates the include/form.html.twig template, which is included in the new and edit view.
+     *
+     * @param string $dir The path to the folder that hosts templates in the bundle
+     */
+    private function generateCustomFormView($dir)
+    {
+        $this->renderFile($this->skeletonDir, 'views/includes/form.html.twig', $dir.'/includes/form.html.twig', array(
+            'dir'               => $this->skeletonDir,
+            'route_prefix'      => $this->routePrefix,
+            'route_name_prefix' => $this->routeNamePrefix,
+            'bundle'            => $this->bundle->getName(),
+            'entity'            => $this->entity,
+            'fields'            => $this->getFieldsFromMetadata($this->metadata),
+            'actions'           => $this->actions,
+            'entity_desc'       => $this->entityDesc,
+            'stringable'        => $this->stringable,
+        ));
+    }
+    
+    /**
      * Generates the index.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
      */
     private function generateIndexView($dir)
     {
-        $fields = $this->metadata->fieldMappings;
-        
-        // Remove some fields we don't want in the list
-        if (!$this->metadata->isIdentifierNatural()) {
-            unset($fields[reset($this->metadata->identifier)]);
-        }
-
-        foreach ($fields as $key=>$field) {
-            if ($field['type'] == 'text' || $field['type'] == 'object') unset($fields[$key]);
-        }
-        
-        unset($fields['created_at'], $fields['updated_at']);
-        
         $this->renderFile($this->skeletonDir, 'views/index.html.twig', $dir.'/index.html.twig', array(
             'dir'               => $this->skeletonDir,
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
-            'fields'            => $fields,
+            'fields'            => $this->getFieldsFromMetadata($this->metadata, array('text', 'object')),
             'actions'           => $this->actions,
+            'custom_form'       => $this->customForm,
             'record_actions'    => $this->getRecordActions(),
             'entity_desc'       => $this->entityDesc,
             'stringable'        => $this->stringable,
@@ -285,6 +300,7 @@ class CrudGenerator extends Generator
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
             'actions'           => $this->actions,
+            'custom_form'       => $this->customForm,
             'entity_desc'       => $this->entityDesc,
             'stringable'        => $this->stringable,
         ));
@@ -304,6 +320,7 @@ class CrudGenerator extends Generator
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
             'actions'           => $this->actions,
+            'custom_form'       => $this->customForm,
             'entity_desc'       => $this->entityDesc,
             'stringable'        => $this->stringable,
         ));
@@ -323,6 +340,7 @@ class CrudGenerator extends Generator
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
             'actions'           => $this->actions,
+            'custom_form'       => $this->customForm,
             'entity_desc'       => $this->entityDesc,
             'stringable'        => $this->stringable,
         ));

@@ -18,7 +18,11 @@
         {{ '{{ form_errors(form) }}' }}
 
         <form class="horizontal-form" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+{% if custom_form %}
+            {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
+{% else %}
             {{ "{{ form_widget(form) }}" }}
+{% endif %}
             
             <div class="form-actions">
                 <button class="btn primary" type="submit">{{ 'Save'|trans }}</button>

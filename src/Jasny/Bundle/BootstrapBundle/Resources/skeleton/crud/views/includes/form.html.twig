@@ -1,0 +1,4 @@
+{% for field, metadata in fields %}
+{{ '{{ form_row(form.' ~ field ~ ') }}' }}
+{% endfor %}
+{{ '{{ form_rest(form) }}' }}

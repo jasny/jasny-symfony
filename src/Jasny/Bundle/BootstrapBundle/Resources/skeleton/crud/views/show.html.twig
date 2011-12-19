@@ -24,7 +24,11 @@
     <section id="{{ route_name_prefix }}-details" class="entity-details edit-entity">
 
         <div class="horizontal-form uneditable-form">
+{% if custom_form %}
+            {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
+{% else %}
             {{ "{{ form_widget(form) }}" }}
+{% endif %}
 
 {% if ('edit' in actions) or ('delete' in actions) %}
             <div class="form-actions">
