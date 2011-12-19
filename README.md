@@ -1,14 +1,17 @@
-JASNY EXTENSTION FROM SYMFONY2
-=================
+Jasny extension to Symfony2
+===========================
 
-The Jasny extension to Symfony2 provides developers a powerfull tools to create deployable applications extremely fast.
+The Jasny extension to Symfony2 provides developers a powerful tools to create deployable applications extremely fast.
 
 This project comes with 2 sets of generators:
 
 * The Bootstrap generator employs the Twitter Bootstrap CSS library to create a clean and slick CRUD screens.
 * The vanilla generator creates a scaffold to apply custom styling on.
 
-Both generators have the option to create controllers, forms and views based on entities in another bundle. This allows for the creation of separate front and back office parts.
+Both generators have the option to create controllers, forms and views based on entities in another bundle. This allows for the creation of separate front and back office bundles.
+
++ http://www.symfony.com
++ http://jasny.github.com/bootstrap
 
 
 Installation
