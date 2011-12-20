@@ -30,9 +30,9 @@
             $em->flush();
             
 {% if stringable %}
-        $this->get('session')->setFlash('notice', "{{ "Deleted %s '$entity'"|trans({'%s': entity_desc.singular})|capitalize }}");
+        $this->get('session')->setFlash('notice', "{{ "Deleted %s% '$entity'"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {% else %}
-        $this->get('session')->setFlash('notice', "{{ "Deleted %s"|trans({'%s': entity_desc.singular})|capitalize }}");
+        $this->get('session')->setFlash('notice', "{{ "Deleted %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {% endif %}
         }
 
@@ -53,7 +53,7 @@
         $tokens = array();
         
         foreach ($entities as $entity) {
-            $fields = $this->createDeleteFrom($entity->getId())->getChildren();
+            $fields = $this->createDeleteForm($entity->getId())->getChildren();
             $tokens[$entity->getId()] = $fields['_token']->getData();
         }
         

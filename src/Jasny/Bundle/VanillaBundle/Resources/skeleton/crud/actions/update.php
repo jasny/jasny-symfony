@@ -35,9 +35,9 @@
         $em->flush();
 
 {% if stringable %}
-        $this->get('session')->setFlash('success', "{{ "Saved %s '$entity'"|trans({'%s': entity_desc.singular}) }}");
+        $this->get('session')->setFlash('success', "{{ "Saved %s% '$entity'"|trans({'%s%': entity_desc.singular}) }}");
 {% else %}
-        $this->get('session')->setFlash('success', "{{ "Saved %s"|trans({'%s': entity_desc.singular}) }}");
+        $this->get('session')->setFlash('success', "{{ "Saved %s%"|trans({'%s%': entity_desc.singular}) }}");
 {% endif %}
 
 {% if 'show' in actions %}

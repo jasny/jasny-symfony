@@ -1,9 +1,12 @@
-{% if not delete_js %}
+{% if delete_js %}
+    {%- set _d_action = "" %}
+    {%- set _d_entity = "" %}
+{% else %}
     {%- set _d_action = "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" %}
     {%- set _d_entity = "{{ entity }}" %}
 {% endif %}
 
-        <div id="{{ route_name_prefix }}-delete-modal">
+        <div id="{{ route_name_prefix }}-delete-modal" style="display: none">
             <form method="post" action="{{ _d_action }}">
 {% if stringable %}
                 <p>{% trans with {'%s%': entity_desc.singular, '%entity%': '<strong class="delete-entity">' ~  _d_entity ~ '</strong>'} %}Are you sure you want to delete %s% '%entity%'?{% endtrans %}</p>
@@ -12,7 +15,7 @@
 {% endif %}
                 <div class="actions">
                     <button type="submit">{{ 'Delete'|trans }}</button>
-                    <a class="cancel" href="#" onclick="$('{{ route_name_prefix }}-delete-modal'.hide())">{{ 'Cancel'|trans }}</a>
+                    <a class="cancel" href="javascript:void()" onclick="$('#{{ route_name_prefix }}-delete-modal').hide()">{{ 'Cancel'|trans }}</a>
                 </div>
 {% if delete_js %}
                 <input type="hidden" name="form[_token]" value="" />

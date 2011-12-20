@@ -8,10 +8,10 @@
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
         
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="application/javascript"></script>
-        <script src="{{ "{{ asset('bundles/jasnybootstrap/ckeditor/ckeditor.js') }}" }}" type="application/javascript"></script>
-        <script src="{{ "{{ asset('bundles/jasnybootstrap/bootstrap/js/min/bootstrap.js') }}" }}" type="application/javascript"></script>
-        <script type="application/javascript">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+        <script src="{{ "{{ asset('bundles/jasnybootstrap/ckeditor/ckeditor.js') }}" }}" type="text/javascript"></script>
+        <script src="{{ "{{ asset('bundles/jasnybootstrap/bootstrap/js/min/bootstrap.js') }}" }}" type="text/javascript"></script>
+        <script type="text/javascript">
             setTimeout(function(){ $(".flash-message").fadeOut() }, 5000);
         </script>
 
@@ -43,19 +43,16 @@
           </div>
         </div>
 
-        <div class="flash-message">
-            {{ "{% if app.session.hasFlash('success') %}" }}
-            <div class="alert-message block-message success fade in" data-alert="alert">
-                <a class="close" href="#">&times;</a>
-                {{ "{{ app.session.flash('success') }}" }}
-            </div>
-            {{ "{% elseif app.session.hasFlash('notice') %}" }}
-            <div class="alert-message flash-message block-message warning fade in" data-alert="alert">
-                <a class="close" href="#">&times;</a>
-                {{ "{{ app.session.flash('notice') }}" }}
-            </div>
+        {{ "{% for type in ['error', 'notice', 'success'] %}" }}
+            {{ "{% if app.session.hasFlash(type) %}" }}
+                <div class="flash-message">
+                    <div class="alert-message block-message {{ '{{ type }}' }} fade in" data-alert="alert">
+                        <a class="close" href="#">&times;</a>
+                        {{ "{{ app.session.flash(type) }}" }}
+                    </div>
+                </div>
             {{ "{% endif %}" }}
-        </div>
+        {{ "{% endfor %}" }}
             
         <div class="container">
             <div class="content">
