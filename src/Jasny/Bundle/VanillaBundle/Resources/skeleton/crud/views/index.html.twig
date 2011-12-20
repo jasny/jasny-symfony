@@ -22,7 +22,7 @@
 {% for field, metadata in fields %}
                     <th class="{{ metadata.type }}-type">{{ field|replace({'_': ' '})|capitalize }}</th>
 {% endfor %}
-{% if ('show' not in actions) and ('edit' not in actions) %}
+{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
                     <th class="row-actions"></th>
 {% endif %}
                 </tr>
@@ -45,15 +45,9 @@
 {%   endif %}
                     </td>
 {% endfor %}
-{% if ('show' not in actions) and ('edit' not in actions) %}
+{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
                     <td class="row-actions nohref">
-{%   for action in record_actions %}
-{%     if 'delete' == action %}
-                        <a href="{{ "{{ path('"~ route_name_prefix ~"_"~ action ~"', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular})|capitalize }}" data-delete-id="{{ '{{ entity.id }}' }}" data-delete-token="{{ '{{ attribute(tokens, entity.id) }}' }}" {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}>{% trans %}Delete{% endtrans %}</a>
-{%     else %}
-                        <a href="{{ "{{ path('"~ route_name_prefix ~"_"~ action ~"', { 'id': entity.id }) }}" }}" title="{{ action ~ ' %s%'|trans({'%s%': entity_desc.singular})|capitalize }}">{{ action ~ ' %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
-{%     endif %}        
-{%   endfor %}
+                        <a class="act danger icon icon-only delete" href="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete-id="{{ '{{ entity.id }}' }}" data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}" {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}>{% trans %}Delete{% endtrans %}</a>
                     </td>
 {% endif %}
                 </tr>
@@ -81,9 +75,9 @@
         {%- set delete_js, delete_js = true, false %}
         {%- include 'views/others/delete_modal.html.twig' %}
 
-        <script type="application/javascript">
+        <script type="text/javascript">
             $(function () {
-                $('#{{ route_name_prefix }}-records-list a.delete').click(function() {
+                $('#{{ route_name_prefix }}-records-list .row-actions a.delete').click(function() {
                     $('#{{ route_name_prefix }}-delete-modal form').attr('action', $(this).attr('href'));
                     $('#{{ route_name_prefix }}-delete-modal input[name="form[id]"]').val($(this).attr('data-delete-id'));
                     $('#{{ route_name_prefix }}-delete-modal input[name="form[_token]"]').val($(this).attr('data-delete-token'));

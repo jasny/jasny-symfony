@@ -53,7 +53,7 @@
         $tokens = array();
         
         foreach ($entities as $entity) {
-            $fields = $this->createDeleteFrom($entity->getId())->getChildren();
+            $fields = $this->createDeleteForm($entity->getId())->getChildren();
             $tokens[$entity->getId()] = $fields['_token']->getData();
         }
         

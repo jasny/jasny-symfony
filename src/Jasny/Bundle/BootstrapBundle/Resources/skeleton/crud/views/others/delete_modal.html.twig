@@ -1,4 +1,7 @@
-{% if not delete_js %}
+{% if delete_js %}
+    {%- set _d_action = "" %}
+    {%- set _d_entity = "" %}
+{% else %}
     {%- set _d_action = "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" %}
     {%- set _d_entity = "{{ entity }}" %}
 {% endif %}

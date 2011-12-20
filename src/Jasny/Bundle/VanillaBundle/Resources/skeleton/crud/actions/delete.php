@@ -47,13 +47,13 @@
         ;
     }
     
-{% if ('index' in actions) and ('show' not in actions) and ('edit' not in actions) %}
+{% if ('index' in actions) %}
     private function createDeleteTokens($entities)
     {
         $tokens = array();
         
         foreach ($entities as $entity) {
-            $fields = $this->createDeleteFrom($entity->getId())->getChildren();
+            $fields = $this->createDeleteForm($entity->getId())->getChildren();
             $tokens[$entity->getId()] = $fields['_token']->getData();
         }
         
