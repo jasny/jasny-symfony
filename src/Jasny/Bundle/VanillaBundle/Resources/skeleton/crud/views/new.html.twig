@@ -1,0 +1,30 @@
+{{ "{% extends '" ~ bundle ~ "::base.html.twig' %}" }}
+
+{{ "{% block title %}" }}{{ 'Edit %s%'|trans({ '%s%': entity_desc.singular})|capitalize }}{{ "{% endblock %}" }}
+
+{{ "{% block javascripts %}" }}
+    {%- include 'views/others/form_javascript.html.twig' %}
+{{ "{% endblock %}" }}
+
+{{ "{% block header %}" }}
+    <h1>{{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</h1>
+{{ "{% endblock %}" }}
+
+{{ "{% block body %}" }}    
+    <section id="{{ route_name_prefix }}-details" class="entity-details new-entity">
+        {{ '{{ form_errors(form) }}' }}
+
+        <form action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+{% if custom_form %}
+            {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
+{% else %}
+            {{ "{{ form_widget(form) }}" }}
+{% endif %}
+            
+            <div class="actions">
+                <button type="submit">{{ 'Save'|trans }}</button>
+                <a class="cancel" href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">{{ 'Cancel'|trans }}</a>
+            </div>
+        </form>
+    </section>
+{{ "{% endblock %}" }}

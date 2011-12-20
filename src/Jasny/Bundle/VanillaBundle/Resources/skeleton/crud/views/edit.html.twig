@@ -1,0 +1,43 @@
+{{ "{% extends '" ~ bundle ~ "::base.html.twig' %}" }}
+
+{{ "{% block title %}" }}{{ 'Edit %s%'|trans({ '%s%': entity_desc.singular})|capitalize }}{% if stringable %} - {{ '{{ entity }}' }}{% endif %}{{ "{% endblock %}" }}
+
+{{ "{% block javascripts %}" }}
+    {%- include 'views/others/form_javascript.html.twig' %}
+{{ "{% endblock %}" }}
+
+{{ "{% block header %}" }}
+{% if stringable %}
+    <h1>{{ '{{ entity }}' }} <small>{{ 'Edit'|trans }}</small></h1>
+{% endif %}
+{{ "{% endblock %}" }}
+
+{{ "{% block body %}" }}    
+    <section id="{{ route_name_prefix }}-details" class="entity-details edit-entity">
+
+        {{ '{{ form_errors(form) }}' }}
+
+        <form action="{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': entity.id }) }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+{% if custom_form %}
+            {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
+{% else %}
+            {{ "{{ form_widget(form) }}" }}
+{% endif %}
+            
+            <div class="actions">
+                <button type="submit">{{ 'Save'|trans }}</button>
+{% if ('index' in actions) or ('show' in actions) %}
+                <a class="cancel" href="{{ "{{ path('"~ route_name_prefix ~ ('show' in actions ? "_show', { 'id': entity.id })" : "')") ~" }}" }}">{{ 'Cancel'|trans }}</a>
+{% endif %}
+            </div>
+        </form>
+
+{% if ('delete' in actions) and ('show' not in actions) %}
+        {%- set delete_js, delete_js = false, false %}
+        {%- include 'views/others/delete_modal.html.twig' %}
+
+        <a href="#" onclick="$('{{ route_name_prefix }}-delete-modal'.show())">{{ 'Delete %s'|trans({'%s': entity_desc.singular})|capitalize }}</a>
+
+{% endif %}
+    </section>
+{{ "{% endblock %}" }}
