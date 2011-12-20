@@ -17,6 +17,9 @@ Both generators have the option to create controllers, forms and views based on 
 Installation
 ------------
 
+Install symfony in {PROJECT_HOME} by following http://symfony.com/doc/current/book/installation.html
+
+
 ```
 cd {PROJECT_HOME}
 git clone git://github.com/jasny/jasny-symfony.git vendor/jasny
