@@ -5,8 +5,11 @@ Deleted %s%: %s% is verwijderd
 Deleted %s% '$entity': %s% '$entity' is verwijderd
 
 # views
+Add: Toevoegen
 Add %s%: %s% toevoegen
+Edit: Bewerken
 Edit %s%: %s% bewerken
+Delete: Verwijderen
 Delete %s%: %s% verwijderen
 Save: Opslaan
 Delete: Verwijderen

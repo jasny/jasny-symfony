@@ -36,7 +36,7 @@ abstract class GenerateFormCommand extends GenerateDoctrineCommand
      */
     protected function configure()
     {
-        $command = strtolower($this->getBundleName()) . ':generate:form';
+        $command = 'generate:' . strtolower($this->getBundleName()) . ':form';
         
         $this
             ->setDefinition(array(

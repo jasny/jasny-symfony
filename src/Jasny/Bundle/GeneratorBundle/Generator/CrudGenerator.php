@@ -299,6 +299,7 @@ class CrudGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'fields'            => $this->getFieldsFromMetadata($this->metadata),
             'actions'           => $this->actions,
             'custom_form'       => $this->customForm,
             'entity_desc'       => $this->entityDesc,

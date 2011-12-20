@@ -67,7 +67,9 @@ class DoctrineEntityGenerator extends BaseGenerator
         $class->mapField(array('fieldName' => 'id', 'type' => 'integer', 'id' => true));
         $class->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_AUTO);
         foreach ($fields as &$field) {
+            // Jasny: Nullable by default
             if ($field['type'] != 'boolean') $field['nullable'] = true;
+            // ---
             if (isset($field['length'])) $field['length'] = (int)$field['length'];
             $class->mapField($field);
         }

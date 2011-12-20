@@ -41,7 +41,7 @@ abstract class GenerateCrudCommand extends GenerateDoctrineCommand
     
     protected function configure()
     {
-        $command = strtolower($this->getBundleName()) . ':generate:crud';
+        $command = 'generate:' . strtolower($this->getBundleName()) . ':crud';
         
         $this
             ->setDefinition(array(
@@ -63,7 +63,6 @@ The <info>$command</info> command generates a {$this->getBundleName()} CRUD base
 EOT
             )
             ->setName($command)
-            ->setAliases(array('generate:' . strtolower($this->getBundleName()) . ':crud'))
         ;
     }
 
@@ -182,9 +181,9 @@ EOT
             'This command helps you generate CRUD controllers and templates.',
             '',
             'First, you need to give the entity for which you want to generate a CRUD.',
-            'You can give an entity that does not exist yet and the wizard will help',
+            /*'You can give an entity that does not exist yet and the wizard will help',
             'you defining it.',
-            '',
+            '',*/
             'You must use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>.',
             '',
         ));
@@ -224,7 +223,7 @@ EOT
         } else {
             $output->writeln(array(
                 '',
-                'By default only the following ' . (count($this->getDefaultActions()) == 1 ? 'action is' : 'actions are') . ' generated: ' . join(', ', $this->getDefaultActions()),
+                'By default only the ' . preg_replace('/,(.*?)$/', ' and\1', join(', ', $this->getDefaultActions())) . ' ' . (count($this->getDefaultActions()) == 1 ? 'action is' : 'actions are') . ' generated.',
                 'However, you may specify which actions to generate (list, show, new, edit and delete).',
                 'Adding or omiting actions will influence views of other actions.',
                 '',
