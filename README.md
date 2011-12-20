@@ -25,7 +25,7 @@ git submodules init
 git submodules update
 cd -
 patch -p1 < vendor/jasny/app.patch
-php app/console assets:install
+php app/console assets:install web
 ```
 
 
