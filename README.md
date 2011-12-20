@@ -24,8 +24,8 @@ Install symfony in {PROJECT_HOME} by following http://symfony.com/doc/current/bo
 cd {PROJECT_HOME}
 git clone git://github.com/jasny/jasny-symfony.git vendor/jasny
 cd vendor/jasny
-git submodules init
-git submodules update
+git submodule init
+git submodule update
 cd -
 patch -p1 < vendor/jasny/app.patch
 php app/console assets:install web
