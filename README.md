@@ -61,6 +61,23 @@ Author
 + http://www.jasny.net
 
 
+Troubleshooting
+---------------
+
+> The function "attribute" does not exist in "AcmeDemoBundle:MyEntity:index.html.twig" at line 3 4
+
+Symfony2 ships with Twig version 1.1.2, which doesn't support the attribute function yet. Please upgrade to v1.4.0 by running:
+
+```
+cd {PROJECT_HOME}
+[ -e vendor/twig/.git ] || ( cp vendor/symfony/vendors.php . && rm -rf vendor/twig && php vendors.php )
+cd vendor/twig
+git fetch origin
+git reset --hard v1.4.0
+cd -
+```
+
+
 Copyright and license
 ---------------------
 
