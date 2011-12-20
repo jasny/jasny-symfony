@@ -26,13 +26,7 @@ git clone git://github.com/jasny/jasny-symfony.git vendor/jasny
 make -C vendor/jasny
 ```
 
-You may also install it as submodule instead, so you can easily update it to the newest version:
-
-```
-cd {PROJECT_HOME}
-git submodule add git://github.com/jasny/jasny-symfony.git vendor/jasny
-make -C vendor/jasny
-```
+To update, simply remove the 'vendor/jasny' directory and run the above command again.
 
 
 Usage
