@@ -15,7 +15,7 @@
 {% endif %}
                 <div class="actions">
                     <button type="submit">{{ 'Delete'|trans }}</button>
-                    <a class="cancel" href="#" onclick="$('{{ route_name_prefix }}-delete-modal'.hide())">{{ 'Cancel'|trans }}</a>
+                    <a class="cancel" href="javascript:void()" onclick="$('#{{ route_name_prefix }}-delete-modal').hide()">{{ 'Cancel'|trans }}</a>
                 </div>
 {% if delete_js %}
                 <input type="hidden" name="form[_token]" value="" />
