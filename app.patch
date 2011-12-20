@@ -6,7 +6,7 @@ diff -u Symfony-orig/app/AppKernel.php Symfony/app/AppKernel.php
              new Symfony\Bundle\AsseticBundle\AsseticBundle(),
              new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
 +            new Jasny\Bundle\BootstrapBundle\JasnyBootstrapBundle(),
-+            new Jasny\Bundle\VanillaBundle\VanillaBootstrapBundle(),
++            new Jasny\Bundle\VanillaBundle\JasnyVanillaBundle(),
              new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
          );
  
