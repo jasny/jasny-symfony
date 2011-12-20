@@ -79,7 +79,7 @@
         {%- set delete_js, delete_js = true, false %}
         {%- include 'views/others/delete_modal.html.twig' %}
 
-        <script type="text/javascript">
+        <script type="application/javascript">
             $(function () {
                 $('#{{ route_name_prefix }}-records-list a.delete').click(function() {
                     $('#{{ route_name_prefix }}-delete-modal form').attr('action', $(this).attr('href'));
