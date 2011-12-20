@@ -47,3 +47,6 @@ table{border-collapse:collapse;border-spacing:0;}
 /* Custom CSS for vanilla */
 tr[data-href]>td{cursor:pointer;}
 tr[data-href]>td.nohref{cursor:normal;}
+:-moz-placeholder{color:#bfbfbf;}
+::-webkit-input-placeholder{color:#bfbfbf;}
+.placeholder{color:#bfbfbf;}
