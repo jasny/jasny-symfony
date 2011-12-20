@@ -1,15 +1,16 @@
 diff -u Symfony-orig/app/AppKernel.php Symfony/app/AppKernel.php
 --- Symfony-orig/app/AppKernel.php	2011-11-02 12:51:07.000000000 +0100
-+++ Symfony/app/AppKernel.php	2011-12-19 22:27:27.475505403 +0100
-@@ -16,6 +16,7 @@
++++ Symfony/app/AppKernel.php	2011-12-20 15:28:18.747503131 +0100
+@@ -16,6 +16,8 @@
              new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
              new Symfony\Bundle\AsseticBundle\AsseticBundle(),
              new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
 +            new Jasny\Bundle\BootstrapBundle\JasnyBootstrapBundle(),
++            new Jasny\Bundle\VanillaBundle\VanillaBootstrapBundle(),
              new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
          );
  
-@@ -24,6 +25,7 @@
+@@ -24,6 +26,7 @@
              $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
              $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
              $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
@@ -19,7 +20,7 @@ diff -u Symfony-orig/app/AppKernel.php Symfony/app/AppKernel.php
          return $bundles;
 diff -u Symfony-orig/app/autoload.php Symfony/app/autoload.php
 --- Symfony-orig/app/autoload.php	2011-11-02 12:51:07.000000000 +0100
-+++ Symfony/app/autoload.php	2011-12-19 22:23:23.635506748 +0100
++++ Symfony/app/autoload.php	2011-12-20 15:27:53.419500659 +0100
 @@ -11,6 +11,7 @@
      'Doctrine\\Common' => __DIR__.'/../vendor/doctrine-common/lib',
      'Doctrine\\DBAL'   => __DIR__.'/../vendor/doctrine-dbal/lib',
@@ -28,7 +29,3 @@ diff -u Symfony-orig/app/autoload.php Symfony/app/autoload.php
      'Monolog'          => __DIR__.'/../vendor/monolog/src',
      'Assetic'          => __DIR__.'/../vendor/assetic/src',
      'Metadata'         => __DIR__.'/../vendor/metadata/src',
-Common subdirectories: Symfony-orig/app/cache and Symfony/app/cache
-Common subdirectories: Symfony-orig/app/config and Symfony/app/config
-Common subdirectories: Symfony-orig/app/logs and Symfony/app/logs
-Common subdirectories: Symfony-orig/app/Resources and Symfony/app/Resources
