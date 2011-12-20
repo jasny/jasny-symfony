@@ -81,25 +81,26 @@ EOT
             }
         }
 
-        $bundle = $input->getOption('bundle');
-        
         $entity = Validators::validateEntityName($input->getOption('entity'));
         list($entityBundle, $entity) = $this->parseShortcutNotation($entity);
 
+        $bundle = $input->getOption('bundle') ?: $entityBundle;
+        
         $format = Validators::validateFormat($input->getOption('format'));
         $prefix = $this->getRoutePrefix($input, $entity);
         
         $language = $input->getOption('lang');
         if (!$language) $language = $this->getContainer()->get('session')->getLocale();
         
+        $singularDesc = $input->getOption('singular') ?: strtolower(preg_replace('~^.*([a-z])(?=[A-Z])|\\\\|_~', '', $entity));
+        $pluralDesc = $input->getOption('plural') ?: $singularDesc . 's';
+        $entityDesc = array('singular'=>$singularDesc, 'plural'=>$pluralDesc);
+        
         $customForm = $input->getOption('custom-form');
-        $entityDesc = array('singular'=>$input->getOption('singular'), 'plural'=>$input->getOption('plural'));
         
         $actions = $input->getOption('actions');
-        $actions = $actions == 'all' ? array('list', 'show', 'new', 'edit', 'delete') : array_intersect(preg_split('/\W+/', $actions), array('list', 'show', 'new', 'edit', 'delete'));
-        foreach ($actions as &$action) {
-            if ($action == 'list') $action = 'index';
-        }
+        $actions = $actions == 'all' ? array('list', 'show', 'new', 'edit', 'delete') : array_intersect(array('list', 'show', 'new', 'edit', 'delete'), preg_split('/\W+/', $actions));
+        if (!empty($actions[0])) $actions[0] = 'index';
 
         if (empty($actions)) {
             $output->writeln('<error>No actions selected</error>');
