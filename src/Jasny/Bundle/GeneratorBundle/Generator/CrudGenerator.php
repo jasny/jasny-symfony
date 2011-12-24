@@ -37,7 +37,6 @@ class CrudGenerator extends Generator
     private $customForm;
     private $entityDesc;
     private $stringable;
-    private $triggerable;
     private $language;
     
     /**
@@ -91,7 +90,6 @@ class CrudGenerator extends Generator
 
         $refl = $metadata->getReflectionClass();
         $this->stringable  = $refl->hasMethod('__toString');
-        $this->triggerable = false;//$refl->implementsInterface('Jasny\Bundle\BootstrapBundle\Entity\TriggerableEntityInterface');
         $this->language = $language;
         
         $this->generateControllerClass();

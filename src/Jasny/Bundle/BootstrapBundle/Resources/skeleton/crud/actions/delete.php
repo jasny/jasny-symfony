@@ -15,10 +15,6 @@
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-{%if triggerable %}
-            $entity->onDelete($this->get('security.context')->getToken()->getUser());
-            
-{% endif %}
             $em = $this->getDoctrine()->getEntityManager();
             $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
 
