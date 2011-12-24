@@ -3,6 +3,24 @@
 
 {{ "{% block title %}" }}{{ 'Edit %s%'|trans({ '%s%': entity_desc.singular})|capitalize }}{% if stringable %} - {{ '{{ entity }}' }}{% endif %}{{ "{% endblock %}" }}
 
+{{ "{% block javascripts %}" }}
+    <script type="text/javascript">
+        var preventUnload = false;
+        window.onbeforeunload = function() { if (preventUnload) return "{% trans %}The changes have not yet been saved. If you navigate away, they will be lost.{% endtrans %}"; }
+        
+        $(function () {
+            $("#{{ route_name_prefix }}-details :input").change( function() { preventUnload = true; } );
+            if (CKEDITOR) {
+                // Requires CKEditor onchange plugin http://alfonsoml.blogspot.com/2011/03/onchange-event-for-ckeditor.html
+                for (var i in CKEDITOR.instances) CKEDITOR.instances[i].on('change', function() { preventUnload = true; } );
+            }
+            
+            $("form").submit( function() { window.onbeforeunload = null; } );
+            $("form .cancel").click( function() { window.onbeforeunload = null; } );
+        });
+    </script>
+{{ "{% endblock %}" }}
+
 {{ "{% block header %}" }}
 {% if stringable %}
     <h1>{{ '{{ entity }}' }} <small>{{ 'Edit %s'|trans({'%s': entity_desc.singular})|capitalize }}</small></h1>
@@ -32,7 +50,7 @@
             <div class="form-actions">
                 <button class="btn primary" type="submit">{{ 'Save'|trans }}</button>
 {% if ('index' in actions) or ('show' in actions) %}
-                <a href="{{ "{{ path('"~ route_name_prefix ~ ('show' in actions ? "_show', { 'id': entity.id })" : "')") ~" }}" }}" class="btn">{{ 'Cancel'|trans }}</a>
+                <a href="{{ "{{ path('"~ route_name_prefix ~ ('show' in actions ? "_show', { 'id': entity.id })" : "')") ~" }}" }}" class="btn cancel">{{ 'Cancel'|trans }}</a>
 {% endif %}
 {% if ('delete' in actions) and ('show' not in actions) %}
                 
