@@ -26,8 +26,10 @@ git clone git://github.com/jasny/jasny-symfony.git vendor/jasny
 make -C vendor/jasny
 ```
 
-To update, simply remove the 'vendor/jasny' directory and run the above command again.
-
+To upgrade, run
+```
+make -C vendor/jasny upgrade
+```
 
 Usage
 -----
@@ -66,12 +68,7 @@ Troubleshooting
 Symfony2 ships with Twig version 1.1.2, which doesn't support the attribute function yet. Please upgrade to v1.4.0 by running:
 
 ```
-cd {PROJECT_HOME}
-[ -e vendor/twig/.git ] || ( cp vendor/symfony/vendors.php . && rm -rf vendor/twig && php vendors.php )
-cd vendor/twig
-git fetch origin
-git reset --hard v1.4.0
-cd -
+make -C vendor/jasny upgrade-twig
 ```
 
 
