@@ -27,10 +27,6 @@
             return $this->displayEditView($entity, $form);
         }
         
-{%if triggerable %}
-        $entity->onUpdate($this->get('security.context')->getToken()->getUser());
-
-{% endif %}
         $em->persist($entity);
         $em->flush();
 

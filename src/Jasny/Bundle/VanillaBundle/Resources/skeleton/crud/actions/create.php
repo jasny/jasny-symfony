@@ -19,10 +19,6 @@
             return $this->displayNewView($entity, $form);
         }
         
-{%if triggerable %}
-        $entity->onCreate($this->get('security.context')->getToken()->getUser());
-
-{% endif %}
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($entity);
         $em->flush();

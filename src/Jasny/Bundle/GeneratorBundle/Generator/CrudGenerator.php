@@ -209,7 +209,6 @@ class CrudGenerator extends Generator
             'format'            => $this->format,
             'entity_desc'       => $this->entityDesc,
             'stringable'        => $this->stringable,
-            'triggerable'       => $this->triggerable,
         ));
     }
 
