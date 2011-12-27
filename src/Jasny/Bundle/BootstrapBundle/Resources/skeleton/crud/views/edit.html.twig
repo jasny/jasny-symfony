@@ -23,9 +23,9 @@
 
 {{ "{% block header %}" }}
 {% if stringable %}
-    <h1>{{ '{{ entity }}' }} <small>{{ 'Edit %s'|trans({'%s': entity_desc.singular})|capitalize }}</small></h1>
+    <h1>{{ '{{ entity }}' }} <small>{{ 'Edit %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</small></h1>
 {% else %}
-    <h1>{{ 'Edit %s'|trans({'%s': entity_desc.singular})|capitalize }}</h1>
+    <h1>{{ 'Edit %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</h1>
 {% endif %}
 {{ "{% endblock %}" }}
 
@@ -54,7 +54,7 @@
 {% endif %}
 {% if ('delete' in actions) and ('show' not in actions) %}
                 
-                <a href="#" class="act danger icon delete pull-right" data-toggle="modal" data-target="#{{ prefix }}-delete-modal">{{ 'Delete %s'|trans({'%s': entity_desc.singular})|capitalize }}</a>
+                <a href="#" class="act danger icon delete pull-right" data-toggle="modal" data-target="#{{ prefix }}-delete-modal">{{ 'Delete %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
 {% endif %}
             </div>
         </form>
