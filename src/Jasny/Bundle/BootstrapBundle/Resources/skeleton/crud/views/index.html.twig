@@ -7,8 +7,8 @@
 {{ "{% endblock %}" }}
 
 {{ "{% block body %}" }}
-    <section id="{{ route_name_prefix }}-list" class="entity-list">
-        <table id="{{ route_name_prefix }}-records-list" class="bordered-table striped-table condensed-table records-list">
+    <section id="{{ prefix }}-list" class="entity-list">
+        <table id="{{ prefix }}-records-list" class="bordered-table striped-table condensed-table records-list">
             <thead>
                 <tr>
 {% for field, metadata in fields %}
@@ -71,15 +71,15 @@
 
         <script type="text/javascript">
             $(function () {
-                $('#{{ route_name_prefix }}-records-list .row-actions a.delete').click(function() {
-                    $('#{{ route_name_prefix }}-delete-modal form').attr('action', $(this).attr('href'));
-                    $('#{{ route_name_prefix }}-delete-modal input[name="form[id]"]').val($(this).attr('data-delete-id'));
-                    $('#{{ route_name_prefix }}-delete-modal input[name="form[_token]"]').val($(this).attr('data-delete-token'));
+                $('#{{ prefix }}-records-list .row-actions a.delete').click(function() {
+                    $('#{{ prefix }}-delete-modal form').attr('action', $(this).attr('href'));
+                    $('#{{ prefix }}-delete-modal input[name="form[id]"]').val($(this).attr('data-delete-id'));
+                    $('#{{ prefix }}-delete-modal input[name="form[_token]"]').val($(this).attr('data-delete-token'));
 {%   if stringable %}
-                    $('#{{ route_name_prefix }}-delete-modal .delete-entity').html($(this).attr('data-delete-desc'));
+                    $('#{{ prefix }}-delete-modal .delete-entity').html($(this).attr('data-delete-desc'));
 {%   endif %}
 
-                    $('#{{ route_name_prefix }}-delete-modal').modal('show');
+                    $('#{{ prefix }}-delete-modal').modal('show');
                     return false;
                 });
             });

@@ -21,7 +21,7 @@
   
   <div class="tab-content">
 {% endif %}
-    <section id="{{ route_name_prefix }}-details" class="entity-details edit-entity">
+    <section id="{{ prefix }}-details" class="entity-details edit-entity">
 
         <div class="horizontal-form uneditable-form">
 {% if custom_form %}
@@ -36,7 +36,7 @@
                 <a href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}" class="btn icon edit">{{ 'Edit %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
 {%   endif %}
 {%   if 'delete' in actions %}
-                <a href="#" class="act danger icon delete pull-right" data-toggle="modal" data-target="#{{ route_name_prefix }}-delete-modal">{{ 'Delete %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
+                <a href="#" class="act danger icon delete pull-right" data-toggle="modal" data-target="#{{ prefix }}-delete-modal">{{ 'Delete %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
             </div>
 {%   endif %}
         </div>

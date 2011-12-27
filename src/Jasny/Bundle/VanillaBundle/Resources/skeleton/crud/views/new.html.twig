@@ -11,10 +11,10 @@
 {{ "{% endblock %}" }}
 
 {{ "{% block body %}" }}    
-    <section id="{{ route_name_prefix }}-details" class="entity-details new-entity">
+    <section id="{{ prefix }}-details" class="entity-details new-entity">
         {{ '{{ form_errors(form) }}' }}
 
-        <form action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+        <form id="{{ prefix }}-form" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
 {% if custom_form %}
             {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
 {% else %}

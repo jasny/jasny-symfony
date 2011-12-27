@@ -9,7 +9,7 @@
 {{ "{% endblock %}" }}
 
 {{ "{% block body %}" }}
-    <section id="{{ route_name_prefix }}-details" class="entity-details">
+    <section id="{{ prefix }}-details" class="entity-details">
 
         <table>
             <tbody>
@@ -36,7 +36,7 @@
         {%- set delete_js, delete_js = false, false %}
         {%- include 'views/others/delete_modal.html.twig' %}
 
-        <a href="#" onclick="$('{{ route_name_prefix }}-delete-modal'.show())">{{ 'Delete %s'|trans({'%s': entity_desc.singular})|capitalize }}</a>
+        <a href="#" onclick="$('{{ prefix }}-delete-modal'.show())">{{ 'Delete %s'|trans({'%s': entity_desc.singular})|capitalize }}</a>
 
 {% endif %}
     </section>

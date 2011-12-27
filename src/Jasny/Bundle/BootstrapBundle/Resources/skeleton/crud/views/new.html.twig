@@ -9,7 +9,7 @@
         window.onbeforeunload = function() { if (preventUnload) return "{% trans with {'%s%': entity_desc.singular} %}This new %s% has not yet been saved. If you navigate away, it will be lost.{% endtrans %}"; }
         
         $(function () {
-            $("#{{ route_name_prefix }}-details :input").change( function() { preventUnload = true; } );
+            $("#{{ prefix }}-details :input").change( function() { preventUnload = true; } );
             if (CKEDITOR) {
                 // Requires CKEditor onchange plugin http://alfonsoml.blogspot.com/2011/03/onchange-event-for-ckeditor.html
                 for (var i in CKEDITOR.instances) CKEDITOR.instances[i].on('change', function() { preventUnload = true; } );
@@ -32,10 +32,10 @@
   
   <div class="tab-content">
 {% endif %}
-    <section id="{{ route_name_prefix }}-details" class="entity-details new-entity">
+    <section id="{{ prefix }}-details" class="entity-details new-entity">
         {{ '{{ form_errors(form) }}' }}
 
-        <form id="{{ route_name_prefix }}-form" class="horizontal-form" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+        <form id="{{ prefix }}-form" class="horizontal-form" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
 {% if custom_form %}
             {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
 {% else %}

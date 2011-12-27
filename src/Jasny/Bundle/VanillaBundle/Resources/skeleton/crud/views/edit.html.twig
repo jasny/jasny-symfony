@@ -13,11 +13,11 @@
 {{ "{% endblock %}" }}
 
 {{ "{% block body %}" }}    
-    <section id="{{ route_name_prefix }}-details" class="entity-details edit-entity">
+    <section id="{{ prefix }}-details" class="entity-details edit-entity">
 
         {{ '{{ form_errors(form) }}' }}
 
-        <form action="{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': entity.id }) }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+        <form id="{{ prefix }}-form" action="{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': entity.id }) }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
 {% if custom_form %}
             {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
 {% else %}
@@ -36,7 +36,7 @@
         {%- set delete_js, delete_js = false, false %}
         {%- include 'views/others/delete_modal.html.twig' %}
 
-        <a href="#" onclick="$('{{ route_name_prefix }}-delete-modal'.show())">{{ 'Delete %s'|trans({'%s': entity_desc.singular})|capitalize }}</a>
+        <a href="#" onclick="$('{{ prefix }}-delete-modal'.show())">{{ 'Delete %s'|trans({'%s': entity_desc.singular})|capitalize }}</a>
 
 {% endif %}
     </section>
