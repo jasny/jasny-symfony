@@ -11,7 +11,7 @@
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->findOneBy(array());
+        $entity = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findOneBy(array());
 
         if (!$entity) {
 {% if 'new' in actions %}

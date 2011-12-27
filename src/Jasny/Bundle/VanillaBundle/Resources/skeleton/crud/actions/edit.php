@@ -11,7 +11,7 @@
     {
         $em = $this->getDoctrine()->getEntityManager();
 
-        $entity = $em->getRepository('{{ bundle }}:{{ entity }}')->find($id);
+        $entity = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find {{ entity_desc.singular }}.');
