@@ -5,9 +5,16 @@
 
 {{ "{% block javascripts %}" }}
     <script type="text/javascript">
-        window.onbeforeunload = function() { return "{% trans with {'%s%': entity_desc.singular} %}This new %s% has not yet been saved. If you navigate away, it will be lost.{% endtrans %}"; }
+        var preventUnload = false;
+        window.onbeforeunload = function() { if (preventUnload) return "{% trans with {'%s%': entity_desc.singular} %}This new %s% has not yet been saved. If you navigate away, it will be lost.{% endtrans %}"; }
         
         $(function () {
+            $("#{{ route_name_prefix }}-details :input").change( function() { preventUnload = true; } );
+            if (CKEDITOR) {
+                // Requires CKEditor onchange plugin http://alfonsoml.blogspot.com/2011/03/onchange-event-for-ckeditor.html
+                for (var i in CKEDITOR.instances) CKEDITOR.instances[i].on('change', function() { preventUnload = true; } );
+            }
+            
             $("form").submit( function() { window.onbeforeunload = null; } );
             $("form .cancel").click( function() { window.onbeforeunload = null; } );
         });
