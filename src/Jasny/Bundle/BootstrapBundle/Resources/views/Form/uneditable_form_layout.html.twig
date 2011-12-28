@@ -98,15 +98,15 @@
 
 {% block checkbox_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({'class' : attr.class|default('') ~ ' uneditable-mark' }) %}
-    <span {{ block('widget_attributes') }}>{% if checked %}&radic;{% else %}&minus;{% endif %}</span>
+    {% set attr = attr|merge({'class' : attr.class|default('') ~ ' uneditable-mark' ~ ( checked ? ' checked' : ' unchecked') }) %}
+    <span {{ block('widget_attributes') }}><span class="checkbox">{% if checked %}&radic;{% else %}&ndash;{% endif %}</span> {{ label|trans }}</span>
 {% endspaceless %}
 {% endblock checkbox_widget %}
 
 {% block radio_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({'class' : attr.class|default('') ~ ' uneditable-mark' }) %}
-    <span {{ block('widget_attributes') }}>{% if checked %}&lowast;{% endif %}</span>
+    {% set attr = attr|merge({'class' : attr.class|default('') ~ ' uneditable-mark' ~ ( checked ? ' checked' : ' unchecked') }) %}
+    <span {{ block('widget_attributes') }}><span class="radio">{% if checked %}&lowast;{% else %}&ndash;{% endif %}</span> {{ label|trans }}</span>
 {% endspaceless %}
 {% endblock radio_widget %}
 
@@ -231,7 +231,7 @@
 {% block field_row %}
 {% spaceless %}
     <div class="control-group {% if form.get('errors') is not empty %}error{% endif %}">
-        {{ form_label(form, label|default(null)) }}
+        {% if checked is not defined %}{{ form_label(form, label|default(null)) }}{% endif %}
         <div class="controls">
             {{ form_widget(form) }}
             {{ form_errors(form) }}

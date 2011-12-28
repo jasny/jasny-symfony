@@ -70,13 +70,13 @@
 
 {% block checkbox_widget %}
 {% spaceless %}
-    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <label><input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} /> {{ label|trans }}</label>
 {% endspaceless %}
 {% endblock checkbox_widget %}
 
 {% block radio_widget %}
 {% spaceless %}
-    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <label><input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} /> {{ label|trans }}</label>
 {% endspaceless %}
 {% endblock radio_widget %}
 
@@ -229,7 +229,7 @@
 {% block field_row %}
 {% spaceless %}
     <fieldset class="control-group {% if required %}required{% endif %} {% if form.get('errors') is not empty %}error{% endif %}">
-        {{ form_label(form, label|default(null)) }}
+        {% if checked is not defined %}{{ form_label(form, label|default(null)) }}{% endif %}
         <div class="controls">
             {{ form_widget(form) }}
             {{ form_errors(form) }}
