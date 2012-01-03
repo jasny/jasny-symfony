@@ -151,7 +151,7 @@
 
 {% block money_widget %}
 {% spaceless %}
-    {{ money_pattern|replace({ '{{ widget }}': block('field_widget') })|raw }}
+    <label class="input-prepend"><span class="add-on">{{ money_pattern|replace({ '{{ widget }}': '</span> ' ~ block('field_widget') })|raw }}</label>
 {% endspaceless %}
 {% endblock money_widget %}
 
@@ -169,7 +169,8 @@
 
 {% block percent_widget %}
 {% spaceless %}
-    {{ block('field_widget') }} %
+    {% set type = type|default('text') %}
+    <label class="input-append">{{ block('field_widget') }} <span class="add-on">%</span></label>
 {% endspaceless %}
 {% endblock percent_widget %}
 
@@ -204,7 +205,7 @@
 {% block generic_label %}
 {% spaceless %}
     {% if label != '-' %}
-        <label{% for attrname,attrvalue in attr %} {{attrname}}="{{attrvalue}}"{% endfor %}>{{ label|trans }}</label>
+        <label for="{{attr.for}}">{{ label|trans }}</label>
     {% endif %}
 {% endspaceless %}
 {% endblock %}
