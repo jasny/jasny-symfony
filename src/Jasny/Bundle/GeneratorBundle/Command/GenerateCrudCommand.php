@@ -177,6 +177,8 @@ EOT
         $dialog = $this->getDialogHelper();
         $dialog->writeSection($output, 'Welcome to the Jasny ' . $this->getBundleName() . ' CRUD generator');
 
+        if ($input->getOption('verbose')) $this->doVerbose($output, $dialog);
+        
         // namespace
         $output->writeln(array(
             '',
@@ -415,6 +417,18 @@ EOT
         return $dialog;
     }
 
+    protected function doVerbose($output, $dialog)
+    {
+        $output->writeln(array("So... you want more information. Seeking for those hard to find answers, are you?", ''));
+        $question = $dialog->ask($output, $dialog->getQuestion('What do you want to know', '', '?'));
+        if (!$question || $question == 'nothing') return;
+            
+        for ($i=0; $i<10; $i++) { usleep(500000); $output->write('.'); }
+        $output->writeln(array('', "The answer is", ''));
+        sleep(2);
+        $output->writeln(base64_decode("IF8gIF8gIF9fX18gIAp8IHx8IHx8X19fIFwgCnwgfHwgfF8gX18pIHwKfF9fICAgXy8gX18vIAogICB8X3x8X19fX198CiAgICAgICAgICAgICAK"));
+    }
+    
     protected function outputWarning($output, $msg)
     {
         $output->writeln(array(
