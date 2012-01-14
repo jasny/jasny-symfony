@@ -62,15 +62,14 @@ class RoutingManipulator extends Manipulator
             mkdir($dir, 0777, true);
         }
 
-        $code = sprintf("%s:\n", $key);
+        $code = sprintf("%s:\n", $bundle.('/' !== $prefix ? '_'.str_replace('/', '_', substr($prefix, 1)) : ''));
         if ('annotation' == $format) {
-            $code .= sprintf("    resource: \"@%s/Controller/\"\n    type:     annotation\n", $bundle);
+            $code .= sprintf("    resource: \"@%s/Controller/%s\"\n    type:     annotation\n", $bundle, $path);
         } else {
             $code .= sprintf("    resource: \"@%s/Resources/config/%s.%s\"\n", $bundle, $path, $format);
         }
         $code .= sprintf("    prefix:   %s\n", $prefix);
-        $code .= "\n";
-        $code .= $current;
+        $code = $current . "\n" . $code;
 
         if (false === file_put_contents($this->file, $code)) {
             return false;
@@ -78,4 +77,27 @@ class RoutingManipulator extends Manipulator
 
         return true;
     }
+    
+    /**
+     * Get the default format for specified bundle
+     * 
+     * @param object $bundle
+     * @param string $default
+     * @return string 
+     */
+    public static function getDefaultFormat($bundle=null, $default='annotation')
+    {
+        if (!$bundle) return $default;
+        
+        $files = glob($bundle->getPath() . '/Resources/config/routing.*');
+        if (!$files) return $default;
+        
+        $ext = strtolower(pathinfo($files[0], PATHINFO_EXTENSION));
+        $contents = file_get_contents($files[0]);
+        
+        if (preg_match('/\btype:\s*annotation\b/i', $contents)) return 'annotation';
+        if (preg_match('/\bresource:\s*".*\.' . $ext . '"/i', $contents)) return $ext;
+        return $default;
+    }
+    
 }

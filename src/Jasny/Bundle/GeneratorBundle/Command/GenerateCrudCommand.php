@@ -49,11 +49,12 @@ abstract class GenerateCrudCommand extends GenerateDoctrineCommand
                 new InputOption('bundle', '', InputOption::VALUE_REQUIRED, 'The target bundle to generate the controller and views in (shortcut notation)'),
                 new InputOption('route-prefix', '', InputOption::VALUE_REQUIRED, 'The route prefix'),
                 new InputOption('actions', '', InputOption::VALUE_REQUIRED, 'Which actions to create (options: list, show, new, edit and delete) ', join(',', (array)$this->getDefaultActions())),
-                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)', 'annotation'),
+                new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)'),
                 new InputOption('lang', '', InputOption::VALUE_REQUIRED, 'Translate the template to this language'),
                 new InputOption('custom-form', '', InputOption::VALUE_NONE, 'Create a view for the form to allow customization'),
                 new InputOption('singular', '', InputOption::VALUE_REQUIRED, 'The description for a single entity'),
                 new InputOption('plural', '', InputOption::VALUE_REQUIRED, 'The description for multiple entities'),
+                new InputOption('itrustyou', '', InputOption::VALUE_NONE, 'The generator won\'t bother you with details :)'),
             ))
             ->setDescription('Generates a ' . $this->getBundleName() . ' CRUD based on a Doctrine entity')
             ->setHelp(<<<EOT
@@ -73,7 +74,7 @@ EOT
     {
         $dialog = $this->getDialogHelper();
 
-        if ($input->isInteractive()) {
+        if ($input->isInteractive() && !$input->getOption('itrustyou')) {
             if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
                 $output->writeln('<error>Command aborted</error>');
 
@@ -81,12 +82,19 @@ EOT
             }
         }
 
+        // entity and bundle
         $entity = Validators::validateEntityName($input->getOption('entity'));
         list($entityBundle, $entity) = $this->parseShortcutNotation($entity);
 
         $bundle = $input->getOption('bundle') ?: $entityBundle;
         
-        $format = Validators::validateFormat($input->getOption('format'));
+        $entityClass  = $this->getContainer()->get('doctrine')->getEntityNamespace($entityBundle).'\\'.$entity;
+        $metadata     = $this->getEntityMetadata($entityClass);
+        $bundle       = $this->getContainer()->get('kernel')->getBundle($bundle);
+        $entityBundle = $this->getContainer()->get('kernel')->getBundle($entityBundle);
+
+        // more settings
+        $format = Validators::validateFormat($input->getOption('format') ?: RoutingManipulator::getDefaultFormat($bundle));
         $prefix = $this->getRoutePrefix($input, $entity);
         
         $language = $input->getOption('lang');
@@ -106,11 +114,6 @@ EOT
             $output->writeln('<error>No actions selected</error>');
             return 1;
         }
-
-        $entityClass  = $this->getContainer()->get('doctrine')->getEntityNamespace($entityBundle).'\\'.$entity;
-        $metadata     = $this->getEntityMetadata($entityClass);
-        $bundle       = $this->getContainer()->get('kernel')->getBundle($bundle);
-        $entityBundle = $this->getContainer()->get('kernel')->getBundle($entityBundle);
         
         // base view
         $baseviewGenerator = $this->getBaseViewGenerator();
@@ -147,17 +150,15 @@ EOT
         }
 
         // routing
-        if ('annotation' != $format) {
-            try {
-                $runner($this->updateRouting($dialog, $input, $output, $bundle, $format, $entity, $prefix));
-            } catch (\RuntimeException $e) {
-                $output->writeln('<fg=red>SKIPPED</>');
-                $this->outputWarning($output, $e->getMessage());
-            }
+        try {
+            $runner($this->updateRouting($dialog, $input, $output, $bundle, $format, $entity, $prefix));
+        } catch (\RuntimeException $e) {
+            $output->writeln('<fg=red>SKIPPED</>');
+            $this->outputWarning($output, $e->getMessage());
         }
         
         // navigation
-        if (!$input->isInteractive() || $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Navigation', 'yes', '?'), true)) {
+        if (!$input->isInteractive() || $input->getOption('itrustyou') || $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Navigation', 'yes', '?'), true)) {
             $output->write('Update navigation: ');
             try {
                 $baseviewGenerator->addToNavigation($bundle, $prefix, $entityDesc['plural']);
@@ -210,7 +211,7 @@ EOT
         $input->setOption('bundle', $bundle);
         
         // Bundle exists?
-        $this->getContainer()->get('kernel')->getBundle($bundle);
+        $obundle = $this->getContainer()->get('kernel')->getBundle($bundle);
                 
         // show and write?
         if ($this->getDefaultActions() === 'all') {
@@ -252,13 +253,16 @@ EOT
         }
         
         // format
-        $format = $input->getOption('format');
-        $output->writeln(array(
-            '',
-            'Determine the format to use for the generated CRUD.',
-            '',
-        ));
-        $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $format), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $format);
+        $format = $input->getOption('format') ?: RoutingManipulator::getDefaultFormat($obundle, null);
+        if (empty($format) || !$input->getOption('itrustyou')) {
+            if (empty($format)) $format = RoutingManipulator::getDefaultFormat();
+            $output->writeln(array(
+                '',
+                'Determine the format to use for the routing.',
+                '',
+            ));
+            $format = $dialog->askAndValidate($output, $dialog->getQuestion('Configuration format (yml, xml, php, or annotation)', $format), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateFormat'), false, $format);
+        }
         $input->setOption('format', $format);
 
         // route prefix
@@ -312,12 +316,12 @@ EOT
     protected function updateRouting($dialog, InputInterface $input, OutputInterface $output, $bundle, $format, $entity, $prefix)
     {
         $auto = true;
-        if ($input->isInteractive()) {
+        if ($input->isInteractive() && !$input->getOption('itrustyou')) {
             $auto = $dialog->askConfirmation($output, $dialog->getQuestion('Confirm automatic update of the Routing', 'yes', '?'), true);
         }
 
         $output->write('Importing the CRUD routes: ');
-        $this->getContainer()->get('filesystem')->mkdir($bundle->getPath().'/Resources/config/');
+        if ('annotation' != $format) $this->getContainer()->get('filesystem')->mkdir($bundle->getPath().'/Resources/config/');
         $ret = false;
         
         if (!$auto) {
@@ -336,7 +340,7 @@ EOT
         }
 
         $routing = new RoutingManipulator($bundle->getPath().'/Resources/config/routing.yml');
-        $routing->addResource($bundle->getName(), $format, '/'.$prefix, 'routing/'.strtolower(str_replace('\\', '_', $entity)));
+        $routing->addResource($bundle->getName(), $format, '/'.$prefix, $format == 'annotation' ? str_replace('\\', '/', $entity) . 'Controller.php' : 'routing/'.strtolower(str_replace('\\', '_', $entity)));
     }
 
     protected function getRoutePrefix(InputInterface $input, $entity)
@@ -421,7 +425,7 @@ EOT
           ""
         ));
     }
-
+    
     protected function getFormActions()
     {
         return array('new', 'edit');
