@@ -201,7 +201,7 @@
 {% block generic_label %}
 {% spaceless %}
     {% if label != '-' %}
-        <label for="{{attr.for}}">{{ label|trans }}</label>
+        <label {% if attr.for is defined %}for="{{attr.for}}"{% endif %}>{{ label|trans }}</label>
     {% endif %}
 {% endspaceless %}
 {% endblock %}
