@@ -14,6 +14,7 @@ namespace Jasny\Bundle\GeneratorBundle\Generator;
 use Symfony\Component\HttpKernel\Util\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Jasny\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
 
 /**
  * Generates a CRUD controller with Bootstrap support.
@@ -66,10 +67,10 @@ class CrudGenerator extends Generator
      *
      * @throws \RuntimeException
      */
-    public function generate(BundleInterface $bundle, BundleInterface $entityBundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $actions, $customForm, $entityDesc, $language)
+    public function generate(BundleInterface $bundle, BundleInterface $entityBundle, $entity, ClassMetadataInfo $metadata, $format, $routePrefix, $routeNamePrefix, $actions, $customForm, $entityDesc, $language)
     {
         $this->routePrefix = $routePrefix;
-        $this->routeNamePrefix = str_replace('/', '_', $routePrefix);
+        $this->routeNamePrefix = $routeNamePrefix;
         $this->actions = $actions;
         $this->customForm = $customForm;
 

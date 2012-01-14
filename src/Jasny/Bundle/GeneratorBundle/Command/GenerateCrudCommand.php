@@ -25,6 +25,7 @@ use Sensio\Bundle\GeneratorBundle\Command\Validators;
 use Sensio\Bundle\GeneratorBundle\Command\Helper\DialogHelper;
 use Jasny\Bundle\GeneratorBundle\Manipulator\RoutingManipulator;
 use Doctrine\ORM\Mapping\MappingException;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Generates a CRUD for a Doctrine entity.
@@ -96,6 +97,7 @@ EOT
         // more settings
         $format = Validators::validateFormat($input->getOption('format') ?: RoutingManipulator::getDefaultFormat($bundle));
         $prefix = $this->getRoutePrefix($input, $entity);
+        $namePrefix = $this->getRouteNamePrefix($bundle, $prefix);
         
         $language = $input->getOption('lang');
         if (!$language) $language = $this->getContainer()->get('session')->getLocale();
@@ -136,7 +138,7 @@ EOT
 
         // CRUD
         $generator = $this->getGenerator();
-        $generator->generate($bundle, $entityBundle, $entity, $metadata[0], $format, $prefix, $actions, $customForm, $entityDesc, $language);
+        $generator->generate($bundle, $entityBundle, $entity, $metadata[0], $format, $prefix, $namePrefix, $actions, $customForm, $entityDesc, $language);
 
         $output->writeln('Generating the CRUD code: <info>OK</info>');
 
@@ -354,6 +356,21 @@ EOT
         return $prefix;
     }
 
+    /**
+     * Get key for routing config 
+     * 
+     * @param BundleInterface $bundle
+     * @param string $routePrefix
+     * @return string
+     */
+    protected function getRouteNamePrefix(BundleInterface $bundle, $routePrefix)
+    {
+        $route = $this->getContainer()->get('router')->getRouteCollection()->get($bundle->getName());
+        if ($route) $prefix = trim($route->getOption('prefix'), '/');
+        
+        return (!empty($prefix) ? $prefix . '_' : '') . str_replace('/', '_', $routePrefix);
+    }
+    
     /**
      * @return BaseViewGenerator
      */

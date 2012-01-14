@@ -99,5 +99,4 @@ class RoutingManipulator extends Manipulator
         if (preg_match('/\bresource:\s*".*\.' . $ext . '"/i', $contents)) return $ext;
         return $default;
     }
-    
 }
