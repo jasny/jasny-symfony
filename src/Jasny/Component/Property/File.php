@@ -18,6 +18,10 @@ class File
 
     protected $dir;
     protected $name;
+    
+    /**
+     * @var Symfony\Component\HttpFoundation\File\File 
+     */
     protected $file;
     
 
@@ -60,12 +64,14 @@ class File
      * 
      * @return SplFileInfo
      */
-    public function getDir()
+    public function getPath()
     {
-        if (isset($this->dir)) return $this->dir;
+        if (!isset($this->dir)) {
+            global $kernel;
+            $dir = $kernel->getContainer()->get('templating.helper.assets')->getUrl($this->getDirname());
+            $this->dir = new \SplFileInfo($_SERVER['DOCUMENT_ROOT'] . $dir);
+        }
         
-        global $kernel;
-        $this->dir = new \SplFileInfo(dirname($kernel->getRootDir()). '/web/' . $this->getDirname());
         return $this->dir;
     }
     
@@ -91,10 +97,7 @@ class File
             $this->name =  $name . '.' . $this->file->guessExtension();
             
         } else {
-            $format = preg_replace_callback('/%\w(\d)\w/', function ($match) { return str_repeat('?', $match[1]); }, $this->format);
-            $format = preg_replace('/%\w/', '*', $format);
-
-            $files = glob($this->getDir() . '/' . $format . '.{' . join(',', $this->types) . '}', GLOB_BRACE);
+            $files = glob($this->getPath() . '/' . $name . '.{' . join(',', $this->types) . '}', GLOB_BRACE);
             $this->name = !empty($files) ? basename($files[0]) : false;
         }
         
@@ -115,15 +118,19 @@ class File
     }
     
     /**
-     * Get relative link to image
+     * Get relative link to image.
      * 
      * @param string $prefix
      * @return string 
      */
     public function getLink($prefix=null)
     {
-        $file = $this->determineName();
-        if (!$file) return null;
+        if ($this->file && $this->file->getPath() == $this->getPath()) {
+            $file = $this->file->getFilename();
+        } else {
+            $file = $this->determineName();
+            if (!$file) return null;
+        }
         
         return $this->getDirname() . "/" . ($prefix ? "$prefix." : '') . $file;
     }
@@ -137,11 +144,16 @@ class File
      */
     public function getAsset($prefix=null)
     {
-        $file = $this->determineName();
-        if (!$file) return null;
-        
-        $path = $this->getDir() . "/$file";
-        if (!file_exists($path)) return null;
+        if ($this->file /*&& $this->file->getPath() == $this->getPath()*/) {
+            $file = $this->file->getFilename();
+            $path = (string)$this->file;
+        } else {
+            $file = $this->determineName();
+            if (!$file) return null;
+
+            $path = $this->getPath() . "/$file";
+            if (!file_exists($path)) return null;
+        }
         
         global $kernel;
         return $kernel->getContainer()->get('templating.helper.assets')->getUrl($this->getDirname() . '/' . ($prefix ? "$prefix." : '') . $file) . '?v=' . substr(filemtime($path), -5);
@@ -151,23 +163,23 @@ class File
     /**
      * Return the file
      * 
-     * @return FsFile 
+     * @return Symfony\Component\HttpFoundation\File\File 
      */
     public function getFile()
     {
         $file = $this->determineName();
-        return $file ? new FsFile($this->getDir() . "/$file", false) : null;
+        return $file ? new FsFile($this->getPath() . "/$file", false) : null;
     }
 
     /**
      * Returns the file, ignoring the replacement
      * 
-     * @return FsFile
+     * @return Symfony\Component\HttpFoundation\File\File
      */
     public function getOldFile()
     {
         $file = $this->determineName(false);
-        return $file ? new FsFile($this->getDir() . "/$file", false) : null;
+        return $file ? new FsFile($this->getPath() . "/$file", false) : null;
     }
     
     /**
@@ -177,33 +189,55 @@ class File
      */
     public function exists()
     {
+        if ($this->file) return true;
+        
         $file = $this->determineName();
-        return $file && file_exists($this->getDir() . "/$file");
+        return $file && file_exists($this->getPath() . "/$file");
     }
+
     
     /**
      * Set replacement file.
      * Fluent interface
      * 
-     * @param FsFile $upload
+     * The replacement file is moved to the web dir with a temporary file name.
+     * 
+     * @param Symfony\Component\HttpFoundation\File\File $file
      * @return File
      */
     public function replace(FsFile $file)
     {
-        $this->file = $file;
+        $this->file = $file->move($this->getPath(),  'tmp.' . md5(microtime()) . '.' . $file->guessExtension());
         return $this;
-    }    
+    } 
     
     /**
      * Get unpersisted uploaded file
      * 
-     * @return FsFile
+     * @return Symfony\Component\HttpFoundation\File\File
      */
     public function getReplacement()
     {
         return $this->file;
     }
 
+    /**
+     * Set unpersisted uploaded file.
+     * Fluent interface
+     * 
+     * @param Symfony\Component\HttpFoundation\File\File|string $file  File object or filename
+     * @return File
+     */
+    public function setReplacement($file)
+    {
+        if (!isset($file) || $file === '') $file = null;
+         elseif (!$file) $file = 0;
+         elseif (!$file instanceof FsFile) $file = new FsFile($this->getPath() . "/$file");
+        
+        $this->file = $file;
+        return $this;
+    }
+    
     /**
      * On persist the image should be deleted.
      * Fluent interface
@@ -212,7 +246,7 @@ class File
      */
     public function clear()
     {
-        $this->file = false;
+        $this->file = 0;
         return $this;
     }
 
@@ -252,7 +286,7 @@ class File
     {
         if (!isset($this->file) || !$this->isValid()) return;
         
-        if (!file_exists($this->getDir())) mkdir($this->getDir(), 0777, true);
+        if (!file_exists($this->getPath())) mkdir($this->getPath(), 0777, true);
         
         $old = $this->getOldFile();
         if (isset($old) && file_exists($old)) unlink($old);
@@ -260,17 +294,17 @@ class File
             unlink($file);
         }
         
-        if ($this->file) $this->file->move($this->getDirname(), $this->determineName(true));
+        if ($this->file) $this->file->move($this->getPath(), $this->determineName(true));
         $this->file = null;
     }
     
     /**
      * Remove the replacement file (don't persist)
-     * 
      */
     public function reset()
     {
         $this->file = null;
+        $this->name = null;
     }
     
     
@@ -282,5 +316,23 @@ class File
     public function __toString()
     {
         return $this->getAsset() ?: '';
+    }
+    
+    /**
+     * Before serialize
+     */
+    public function __sleep()
+    {
+        $this->file_name = isset($this->file) ? (string)$this->file : null;
+        return array('entity', 'dirname', 'types', 'property', 'format', 'file_name');
+    }
+
+    /**
+     * After unserialize
+     */
+    public function __wakeup()
+    {
+        if (isset($this->file_name)) $this->file = new FsFile($this->file_name);
+        unset($this->file_name);
     }
 }
