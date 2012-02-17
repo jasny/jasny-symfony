@@ -12,7 +12,6 @@ Edit %s%: %s% bewerken
 Delete: Verwijderen
 Delete %s%: %s% verwijderen
 Save: Opslaan
-Delete: Verwijderen
 Cancel: Annuleren
 Previous: Vorige
 Next: Volgende
@@ -29,3 +28,5 @@ Log in: Inloggen
 Log out: Uitloggen
 Register: Registreren
 My Website: Mijn Website
+
+# Also see translation files in BootstrapBundle

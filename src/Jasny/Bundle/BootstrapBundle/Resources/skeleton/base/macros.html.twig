@@ -1,0 +1,42 @@
+{% macro prevent_unload_js(element, message) %}
+    <script type="text/javascript">
+        var preventUnload = false;
+        window.onbeforeunload = function() { if (preventUnload) return "{{ message }}"; }
+        
+        $(function () {
+            $("{{ element }} :input").change( function() { preventUnload = true; } );
+            if (typeof(CKEDITOR) != 'undefined') {
+                // Requires CKEditor onchange plugin http://alfonsoml.blogspot.com/2011/03/onchange-event-for-ckeditor.html
+                for (var i in CKEDITOR.instances) CKEDITOR.instances[i].on('change', function() { preventUnload = true; } );
+            }
+            
+            $("form").submit( function() { window.onbeforeunload = null; } );
+            $("form .cancel").click( function() { window.onbeforeunload = null; } );
+        });
+    </script>
+{% endmacro %}
+
+{% macro delete_modal(prefix, action, message, entity, form) %}
+        <div id="{{ prefix }}-delete-modal" class="modal hide fade">
+            <form method="post" action="{{action }}">
+                <div class="modal-header">
+                    <a href="#" class="close" data-dismiss="modal">&times;</a>
+                    <h3>{{ 'Caution!'|trans }}</h3>
+                </div>
+                <div class="modal-body">
+                    <p>{{ message|replace({'%entity%': '<strong class="delete-entity">' ~ entity ~ '</strong>'}) }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn danger">{{ 'Delete'|trans }}</button>
+                    <a href="#" class="btn" data-dismiss="modal">{{ 'Cancel'|trans }}</a>
+                </div>
+                
+                {{ '{% if form %}' }}
+                    {{ '{{ form_rest(form) }}' }}
+                {{ '{% else %}' }}
+                    <input type="hidden" name="form[_token]" value="" />
+                    <input type="hidden" name="form[id]" value="" />
+                {{ '{% endif %}' }}
+           </form>
+        </div>
+{% endmacro %}

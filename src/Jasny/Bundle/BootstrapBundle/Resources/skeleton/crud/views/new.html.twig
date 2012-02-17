@@ -4,52 +4,40 @@
 {{ "{% block title %}" }}{{ 'Edit %s%'|trans({ '%s%': entity_desc.singular})|capitalize }}{{ "{% endblock %}" }}
 
 {{ "{% block javascripts %}" }}
-    <script type="text/javascript">
-        var preventUnload = false;
-        window.onbeforeunload = function() { if (preventUnload) return "{% trans with {'%s%': entity_desc.singular} %}This new %s% has not yet been saved. If you navigate away, it will be lost.{% endtrans %}"; }
-        
-        $(function () {
-            $("#{{ prefix }}-details :input").change( function() { preventUnload = true; } );
-            if (CKEDITOR) {
-                // Requires CKEditor onchange plugin http://alfonsoml.blogspot.com/2011/03/onchange-event-for-ckeditor.html
-                for (var i in CKEDITOR.instances) CKEDITOR.instances[i].on('change', function() { preventUnload = true; } );
-            }
-            
-            $("form").submit( function() { window.onbeforeunload = null; } );
-            $("form .cancel").click( function() { window.onbeforeunload = null; } );
-        });
-    </script>
-{{ "{% endblock %}" }}
-
-{{ "{% block header %}" }}
-    <h1>{{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</h1>
+    {{ bootstrap.prevent_unload_js("#" ~ prefix ~ "-form", "This new %s% has not yet been saved. If you navigate away, it will be lost."|trans({'%s%': entity_desc.singular}) }}
 {{ "{% endblock %}" }}
 
 {{ "{% block body %}" }}    
 {% if 'index' not in actions %}
-<div class="tabbable">
-  {%- include 'views/others/list_tabs.html.twig' %}
+    <div class="content tabbable tabs-left">
+      {%- include 'views/others/list_tabs.html.twig' %}
   
-  <div class="tab-content">
-{% endif %}
-    <section id="{{ prefix }}-details" class="entity-details new-entity">
-        {{ '{{ form_errors(form) }}' }}
-
-        <form id="{{ prefix }}-form" class="horizontal-form" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
-{% if custom_form %}
-            {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
+      <div class="tab-content">
 {% else %}
-            {{ "{{ form_widget(form) }}" }}
+    <div class="content">
 {% endif %}
-            
-            <div class="form-actions">
-                <button class="btn primary" type="submit">{{ 'Save'|trans }}</button>
-                <a href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}" class="btn cancel">{{ 'Cancel'|trans }}</a>
-            </div>
-        </form>
-    </section>
+        <div class="page-header">
+            <h1>{{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</h1>
+        </div>
+          
+        <section id="{{ prefix }}-details" class="entity-details new-entity">
+            {{ '{{ form_errors(form) }}' }}
+
+            <form id="{{ prefix }}-form" class="horizontal-form" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+{% if custom_form %}
+                {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
+{% else %}
+                {{ "{{ form_widget(form) }}" }}
+{% endif %}
+
+                <div class="form-actions">
+                    <button class="btn primary" type="submit">{{ 'Save'|trans }}</button>
+                    <a href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}" class="btn cancel">{{ 'Cancel'|trans }}</a>
+                </div>
+            </form>
+        </section>
 {% if 'index' not in actions %}
-  </div>
-</div>
+      </div>
+    </div>
 {% endif %}
 {{ "{% endblock %}" }}
