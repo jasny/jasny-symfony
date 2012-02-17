@@ -3,3 +3,7 @@ services:
         class: Jasny\Bundle\FrameworkBundle\Form\Type\DateType
         tags:
             - { name: form.type, alias: date }
+    form.type.datetime:
+        class: Jasny\Bundle\FrameworkBundle\Form\Type\DateTimeType
+        tags:
+            - { name: form.type, alias: datetime }
