@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\DataTransformerChain;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToArrayTransformer;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToStringTransformer;
 use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToTimestampTransformer;
+use Symfony\Component\Form\Extension\Core\DataTransformer\DateTimeToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\DataTransformer\ArrayToPartsTransformer;
 
 class DateTimeType extends BaseType
@@ -46,7 +47,16 @@ class DateTimeType extends BaseType
             return;
         }
 
-        $builder->appendClientTransformer(new DateTimeToStringTransformer($options['data_timezone'], $options['user_timezone'], $format));
+        $formatter = new \IntlDateFormatter(
+            \Locale::getDefault(),
+            \IntlDateFormatter::SHORT,
+            \IntlDateFormatter::NONE,
+            \DateTimeZone::UTC,
+            \IntlDateFormatter::GREGORIAN,
+            $pattern
+        );
+
+        $builder->appendClientTransformer(new DateTimeToLocalizedStringTransformer($options['data_timezone'], $options['user_timezone'], \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE, \IntlDateFormatter::GREGORIAN, $format));
         
         if ($options['input'] === 'string') {
             $builder->appendNormTransformer(new ReversedTransformer(
@@ -62,9 +72,20 @@ class DateTimeType extends BaseType
             ));
         }
 
+        $builder->setAttribute('formatter', $formatter);
         $builder->setAttribute('widget', $options['widget']);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form)
+    {
+        $view->set('inputmask', $form->getAttribute('inputmask'));
+        $view->set('placeholder', $form->getAttribute('placeholder'));
+        $view->set('widget', $form->getAttribute('widget'));
+    }
+    
     /**
      * {@inheritdoc}
      */
