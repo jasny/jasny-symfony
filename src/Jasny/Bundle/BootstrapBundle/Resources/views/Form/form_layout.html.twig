@@ -286,7 +286,7 @@
 
 {% block widget_attributes %}
 {% spaceless %}
-    id="{{ id }}" name="{{ full_name }}"{% if read_only %} disabled="disabled"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}
+    id="{{ id }}" name="{{ full_name }}"{% if read_only %} disabled="disabled"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if placeholder is defined %} placeholder="{{ placeholder }}"{% endif %}{% if inputmask is defined and inputmask %} data-inputmask="{{ inputmask }}"{% endif %}
     {#{% if required %} required="required"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}#} {# HTML5 features #}
     {% for attrname,attrvalue in attr %}{{attrname}}="{{attrvalue}}" {% endfor %}
 {% endspaceless %}
