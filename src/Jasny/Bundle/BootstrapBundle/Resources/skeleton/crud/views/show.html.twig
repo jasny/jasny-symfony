@@ -4,53 +4,56 @@
 {{ "{% block title %}" }}{{ entity_desc.singular|capitalize }}{% if stringable %} - {{ '{{ entity }}' }}{% endif %}{{ "{% endblock %}" }}
 
 {{ "{% block header %}" }}
-{% if 'index' in actions %}
-    <div class="header-actions pull-right"><a href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">&larr; {{ 'Back'|trans }}</a></div>
-{% endif %}
-{% if stringable %}
-    <h1>{{ '{{ entity }}' }} <small>{{ entity_desc.singular|capitalize }}</small></h1>
-{% else %}
-    <h1>{{ entity_desc.singular|capitalize }}</h1>
-{% endif %}
 {{ "{% endblock %}" }}
 
-{{ "{% block body %}" }}
 {% if 'index' not in actions %}
-<div class="tabbable">
-  {%- include 'views/others/list_tabs.html.twig' %}
-  
-  <div class="tab-content">
-{% endif %}
-    <section id="{{ prefix }}-details" class="entity-details edit-entity">
-
-        <div class="horizontal-form uneditable-form">
-{% if custom_form %}
-            {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
+    <div class="content tabbable tabs-left">
+      {%- include 'views/others/list_tabs.html.twig' %}
+      
+      <div class="tab-content">
 {% else %}
-            {{ "{{ form_widget(form) }}" }}
+    <div class="content">
+{% endif %}
+        <div class="page-header">
+{% if 'index' in actions %}
+            <div class="header-actions pull-right"><a href="{{ "{{ path('"~ route_name_prefix ~"') }}" }}">&larr; {{ 'Back'|trans }}</a></div>
+{% endif %}
+{% if stringable %}
+            <h1>{{ '{{ entity }}' }} <small>{{ entity_desc.singular|capitalize }}</small></h1>
+{% else %}
+            <h1>{{ entity_desc.singular|capitalize }}</h1>
+{% endif %}
+        </div>
+
+        <section id="{{ prefix }}-details" class="entity-details show-entity">
+            <div class="form-horizontal uneditable-form">
+{% if custom_form %}
+                {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
+{% else %}
+                {{ "{{ form_widget(form) }}" }}
 {% endif %}
 
 {% if ('edit' in actions) or ('delete' in actions) %}
-            <div class="form-actions">
+                <div class="form-actions">
 {%   if 'edit' in actions %}
-                <a href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}" class="btn icon edit">{{ 'Edit %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
+                    <a href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}" class="btn icon edit">{{ 'Edit %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
 {%   endif %}
 {%   if 'delete' in actions %}
-                <a href="#" class="act act-danger pull-right" data-toggle="modal" data-target="#{{ prefix }}-delete-modal"><i class="iconic-x"></i> {{ 'Delete %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
-            </div>
+                    <a href="#" class="act act-danger pull-right" data-toggle="modal" data-target="#{{ prefix }}-delete-modal"><i class="iconic-x"></i> {{ 'Delete %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
 {%   endif %}
-        </div>
+                </div>
+            </div>
 
 {% endif %}
-    </section>
+        </section>
 {% if 'index' not in actions %}
-  </div>
-</div>
+      </div>
 {% endif %}
+    </div>
 {{ "{% endblock %}" }}
-    
+
 {% if 'delete' in actions %}
-
-        {%- include 'views/others/delete_modal.html.twig' %}
-
+{{ "{% block modals %}" }}
+    {%- include 'views/others/delete_modal.html.twig' %}
+{{ "{% endblock %}" }}
 {% endif %}
