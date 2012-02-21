@@ -69,13 +69,15 @@ class BaseViewGenerator extends Generator
             throw new \RuntimeException("Base view already exists");
         }
         
-        $this->renderFile($this->skeletonDir, 'base.html.twig', $dir.'/base.html.twig', $parameters + array(
-            'dir'               => $this->skeletonDir,
-            'bundle'            => $bundle->getName(),
-        ));
+        $files = glob($this->skeletonDir . '/*.html.twig');
         
-        if (!file_exists($dir . '/nav.html.twig')) {
-            touch($dir . '/nav.html.twig');
+        foreach ($files as $file) {
+            $file = basename($file);
+            
+            $this->renderFile($this->skeletonDir, $file, $dir.'/'.$file, $parameters + array(
+                'dir'               => $this->skeletonDir,
+                'bundle'            => $bundle->getName(),
+            ));
         }
     }
     

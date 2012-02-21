@@ -3,9 +3,7 @@
 
 {{ "{% block title %}" }}{{ entity_desc.singular|capitalize }}{% if stringable %} - {{ '{{ entity }}' }}{% endif %}{{ "{% endblock %}" }}
 
-{{ "{% block header %}" }}
-{{ "{% endblock %}" }}
-
+{{ "{% block body %}" }}
 {% if 'index' not in actions %}
     <div class="content tabbable tabs-left">
       {%- include 'views/others/list_tabs.html.twig' %}

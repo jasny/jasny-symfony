@@ -16,8 +16,8 @@
         {{ "{% block stylesheets %}" }}
         {{ "{% endblock %}" }}
     </head>
-    <body style="padding-top: 60px">
-        <div class="navbar navbar-fixed">
+    <body style="padding-top: 40px">
+        <div class="navbar navbar-fixed-top">
           <div class="navbar-inner">
             <div class="container">
               <span class="brand">{{ sitename|default('My Website'|trans) }}</span>
@@ -47,28 +47,23 @@
         {{ "{% endfor %}" }}
             
         <div class="container">
-            <div class="content">
-                <div class="page-header">
-                    {{ "{% block header %}" }}
-                    {{ "{% endblock %}" }}
-                </div>
-
-                {{ "{% block body %}" }}
-                {{ "{% endblock %}" }}
-            </div>
+            {{ "{% block body %}" }}
+            {{ "{% endblock %}" }}
 
             <footer>
                 <p>&copy; {{ "now"|date("Y") }} {{ sitename|default('My Website'|trans) }}</p>
             </footer>
         </div> 
 
+        {{ "{% block modals %}" }}
+        {{ "{% endblock %}" }}
             
         <!-- Le javascript
         ================================================== -->
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
         <script src="{{ "{{ asset('bundles/jasnybootstrap/ckeditor/ckeditor.js') }}" }}" type="text/javascript"></script>
-        <script src="{{ "{{ asset('bundles/jasnybootstrap/bootstrap/js/bootstrap.min.js') }}" }}" type="text/javascript"></script>
+        <script src="{{ "{{ asset('bundles/jasnybootstrap/bootstrap/js/bootstrap.js') }}" }}" type="text/javascript"></script>
         <script type="text/javascript">
             setTimeout(function(){ $(".flash-message").fadeOut() }, 5000);
         </script>

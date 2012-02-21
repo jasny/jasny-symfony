@@ -2,89 +2,74 @@
 
 {{ "{% block title %}"}}{{ entity_desc.plural|title }}{{ "{% endblock %}" }}
 
-{{ "{% block header %}" }}
-    <h1>{{ entity_desc.plural|title }}</h1>
-{{ "{% endblock %}" }}
-
 {{ "{% block body %}" }}
-    <section id="{{ prefix }}-list" class="entity-list">
-        <table id="{{ prefix }}-records-list" class="table table-bordered table-striped table-condensed records-list">
-            <thead>
-                <tr>
+    <div class="content">
+        <div class="page-header">
+            <h1>{{ entity_desc.plural|title }}</h1>
+        </div>
+
+        <section id="{{ prefix }}-list" class="entity-list">
+            <table id="{{ prefix }}-records-list" class="table table-bordered table-striped table-condensed records-list">
+                <thead>
+                    <tr>
 {% for field, metadata in fields %}
-                    <th class="{{ metadata.type }}-type">{{ field|replace({'_': ' '})|capitalize }}</th>
+                        <th class="{{ metadata.type }}-type">{{ field|replace({'_': ' '})|capitalize }}</th>
 {% endfor %}
 {% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
-                    <th class="row-actions"></th>
+                        <th class="row-actions"></th>
 {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-            {{ '{% for entity in entities %}' }}
-                <tr class="{{ "{{ cycle(['odd', 'even'], loop.index) }}" }}" {% if 'show' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': entity.id }) }}" }}"{% elseif 'edit' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}"{% endif %}>
+                    </tr>
+                </thead>
+                <tbody>
+                {{ '{% for entity in entities %}' }}
+                    <tr class="{{ "{{ cycle(['odd', 'even'], loop.index) }}" }}" {% if 'show' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': entity.id }) }}" }}"{% elseif 'edit' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}"{% endif %}>
 {% for field, metadata in fields %}
-                    <td class="{{ metadata.type }}-type">
+                        <td class="{{ metadata.type }}-type">
 {%   if metadata.type == 'date' %}
-                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'d-m-Y\') }}{% endif %}' }}
+                            {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'d-m-Y\') }}{% endif %}' }}
 {%   elseif metadata.type == 'datetime' %}
-                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'d-m-Y H:i:s\') }}{% endif %}' }}
+                            {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'d-m-Y H:i:s\') }}{% endif %}' }}
 {%   elseif metadata.type == 'boolean' %}
-                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}yes{% else %}no{% endif %}' }}
+                            {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}yes{% else %}no{% endif %}' }}
 {%   elseif metadata.type == 'percentage' %}
-                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' is not empty %}{{ entity.'~ field|replace({'_': ''}) ~' * 100 }} %{% endif %}' }}
+                            {{ '{% if entity.'~ field|replace({'_': ''}) ~' is not empty %}{{ entity.'~ field|replace({'_': ''}) ~' * 100 }} %{% endif %}' }}
 {%   else %}
-                        {{ '{{ entity.'~ field|replace({'_': ''}) ~' }}' }}
+                            {{ '{{ entity.'~ field|replace({'_': ''}) ~' }}' }}
 {%   endif %}
-                    </td>
+                        </td>
 {% endfor %}
 {% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
-                    <td class="row-actions nohref">
-                        <a class="act danger icon icon-only delete" href="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete-id="{{ '{{ entity.id }}' }}" data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}" {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}>{% trans %}Delete{% endtrans %}</a>
-                    </td>
+                        <td class="row-actions nohref">
+                            <a class="act danger icon icon-only delete" href="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete-id="{{ '{{ entity.id }}' }}" data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}" {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}>{% trans %}Delete{% endtrans %}</a>
+                        </td>
 {% endif %}
-                </tr>
-            {{ '{% endfor %}' }}
-            </tbody>
-        </table>
+                    </tr>
+                {{ '{% endfor %}' }}
+                </tbody>
+            </table>
 
 {% if pagination %}
-        <div class="pagination">
-            <ul>
-                {{ '{% if page == 1 %}' }}<li class="prev disabled"><a href="#">{{ '{% else %}' }}<li class="prev"><a href="{{ "{{ path('"~ route_name_prefix ~"_page', { 'page': page-1 }) }}" }}">{{ '{% endif %}' }}&larr; {{ 'Previous'|trans }}</a></li>
-                {{ '{% for i in 1..pagecount %}' }}
-                    <li class="{{ '{% if i == page %}' }}active{{ '{% endif %}' }}"><a href="{{ "{{ path('"~ route_name_prefix ~"_page', { 'page': i }) }}" }}">{{ '{{ i }}' }}</a></li>
-                {{ '{% endfor %}' }}
-                {{ '{% if page == pagecount %}' }}<li class="next disabled"><a href="#">{{ '{% else %}' }}<li class="next"><a href="{{ "{{ path('"~ route_name_prefix ~"_page', { 'page': page+1 }) }}" }}">{{ '{% endif %}' }}{{ 'Next'|trans }} &rarr;</a></li>
-            </ul>
-        </div>
+            <div class="pagination">
+                <ul>
+                    {{ '{% if page == 1 %}' }}<li class="prev disabled"><a href="#">{{ '{% else %}' }}<li class="prev"><a href="{{ "{{ path('"~ route_name_prefix ~"_page', { 'page': page-1 }) }}" }}">{{ '{% endif %}' }}&larr; {{ 'Previous'|trans }}</a></li>
+                    {{ '{% for i in 1..pagecount %}' }}
+                        <li class="{{ '{% if i == page %}' }}active{{ '{% endif %}' }}"><a href="{{ "{{ path('"~ route_name_prefix ~"_page', { 'page': i }) }}" }}">{{ '{{ i }}' }}</a></li>
+                    {{ '{% endfor %}' }}
+                    {{ '{% if page == pagecount %}' }}<li class="next disabled"><a href="#">{{ '{% else %}' }}<li class="next"><a href="{{ "{{ path('"~ route_name_prefix ~"_page', { 'page': page+1 }) }}" }}">{{ '{% endif %}' }}{{ 'Next'|trans }} &rarr;</a></li>
+                </ul>
+            </div>
 
 {% endif %}
 {% if 'new' in actions %}
-        <div class="table-actions">
-            <a href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}" class="btn success icon add pull-right">{{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
-        </div>
-
-{% endif %}
-{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
-        {%- set delete_js, delete_js = true, false %}
-        {%- include 'views/others/delete_modal.html.twig' %}
-
-        <script type="text/javascript">
-            $(function () {
-                $('#{{ prefix }}-records-list .row-actions a.delete').click(function() {
-                    $('#{{ prefix }}-delete-modal form').attr('action', $(this).attr('href'));
-                    $('#{{ prefix }}-delete-modal input[name="form[id]"]').val($(this).attr('data-delete-id'));
-                    $('#{{ prefix }}-delete-modal input[name="form[_token]"]').val($(this).attr('data-delete-token'));
-{%   if stringable %}
-                    $('#{{ prefix }}-delete-modal .delete-entity').html($(this).attr('data-delete-desc'));
-{%   endif %}
-
-                    $('#{{ prefix }}-delete-modal').modal('show');
-                    return false;
-                });
-            });
-        </script>
+            <div class="table-actions">
+                <a href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}" class="btn btn-success pull-right"><i class="iconic-plus"></i> {{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
+            </div>
 
 {% endif %}
     </section>
 {{ '{% endblock %}' }}
+
+{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
+        {%- set delete_js, delete_js = true, false %}
+        {%- include 'views/others/delete_modal.html.twig' %}
+{% endif %}
