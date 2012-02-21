@@ -4,7 +4,7 @@
 {{ "{% block title %}" }}{{ 'Edit %s%'|trans({ '%s%': entity_desc.singular})|capitalize }}{{ "{% endblock %}" }}
 
 {{ "{% block javascripts %}" }}
-    {{ bootstrap.prevent_unload_js("#" ~ prefix ~ "-form", "This new %s% has not yet been saved. If you navigate away, it will be lost."|trans({'%s%': entity_desc.singular}) }}
+    {{ '{{ bootstrap.prevent_unload_js("#' ~ prefix ~ '-form", "' ~ "This new %s% has not yet been saved. If you navigate away, it will be lost."|trans({'%s%': entity_desc.singular}) ~ '") }}' }}
 {{ "{% endblock %}" }}
 
 {{ "{% block body %}" }}    

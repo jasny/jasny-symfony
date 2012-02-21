@@ -1,3 +1,4 @@
+{% raw %}
 {% macro prevent_unload_js(element, message) %}
     <script type="text/javascript">
         var preventUnload = false;
@@ -15,28 +16,35 @@
         });
     </script>
 {% endmacro %}
+{% endraw %}
 
+{% raw %}
 {% macro delete_modal(prefix, action, message, entity, form) %}
         <div id="{{ prefix }}-delete-modal" class="modal hide fade">
-            <form method="post" action="{{action }}">
+            <form method="post" action="{{ action }}">
+{% endraw %}
                 <div class="modal-header">
                     <a href="#" class="close" data-dismiss="modal">&times;</a>
                     <h3>{{ 'Caution!'|trans }}</h3>
                 </div>
+{% raw %}
                 <div class="modal-body">
-                    <p>{{ message|replace({'%entity%': '<strong class="delete-entity">' ~ entity ~ '</strong>'}) }}</p>
+                    <p>{{ message|escape|replace({'%entity%': '<strong class="delete-entity">' ~ entity ~ '</strong>'})|raw }}</p>
                 </div>
+{% endraw %}
                 <div class="modal-footer">
                     <button type="submit" class="btn danger">{{ 'Delete'|trans }}</button>
                     <a href="#" class="btn" data-dismiss="modal">{{ 'Cancel'|trans }}</a>
                 </div>
                 
-                {{ '{% if form %}' }}
-                    {{ '{{ form_rest(form) }}' }}
-                {{ '{% else %}' }}
+{% raw %}                
+                {% if form %}
+                    {{ form_rest(form) }}
+                {% else %}
                     <input type="hidden" name="form[_token]" value="" />
                     <input type="hidden" name="form[id]" value="" />
-                {{ '{% endif %}' }}
+                {% endif %}
            </form>
         </div>
 {% endmacro %}
+{% endraw %}
