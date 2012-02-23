@@ -7,3 +7,11 @@ services:
         class: Jasny\Bundle\FrameworkBundle\Form\Type\DateTimeType
         tags:
             - { name: form.type, alias: datetime }
+    form.type.editor:
+        class: Jasny\Bundle\FrameworkBundle\Form\Type\EditorType
+        tags:
+            - { name: form.type, alias: editor }
+    form.type.ckeditor:
+        class: Jasny\Bundle\FrameworkBundle\Form\Type\CKEditorType
+        tags:
+            - { name: form.type, alias: ckeditor }

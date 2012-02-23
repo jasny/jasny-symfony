@@ -20,4 +20,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class JasnyFrameworkBundle extends Bundle
 {
+    public function getParent()
+    {
+        return 'FrameworkBundle';
+    }    
 }
