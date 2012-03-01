@@ -11,7 +11,12 @@ services:
         class: Jasny\Bundle\FrameworkBundle\Form\Type\EditorType
         tags:
             - { name: form.type, alias: editor }
-    form.type.ckeditor:
-        class: Jasny\Bundle\FrameworkBundle\Form\Type\CKEditorType
+    
+    twig.extension.pcre:
+        class: Jasny\Bundle\FrameworkBundle\Twig\PcreExtension
         tags:
-            - { name: form.type, alias: ckeditor }
+            - { name: twig.extension }
+    twig.extension.localdate:
+        class: Jasny\Bundle\FrameworkBundle\Twig\LocalDateExtension
+        tags:
+            - { name: twig.extension }
