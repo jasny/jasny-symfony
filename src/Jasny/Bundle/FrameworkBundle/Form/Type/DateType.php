@@ -26,8 +26,8 @@ class DateType extends BaseType
     {
         if (isset($options['pattern'])) $options['format'] = $options['pattern'];
 
-        $pattern = is_string($options['format']) ? $options['format'] : datefmt_get_pattern(datefmt_create(\Locale::getDefault(), $options['format'], \IntlDateFormatter::NONE, \DateTimeZone::UTC, \IntlDateFormatter::GREGORIAN));
-        $pattern = strtolower(preg_replace(array('/\bd\b/', '/\bM\b/', '/\by{1,2}\b/', '/\by{3,}\b/'), array('dd', 'mm', 'yy', 'yyyy'), $options['format']));
+        $pattern = is_string($options['format']) ? $options['format'] : \IntlDateFormatter::create(\Locale::getDefault(), $options['format'], \IntlDateFormatter::NONE, \DateTimeZone::UTC, \IntlDateFormatter::GREGORIAN)->getPattern();
+        $pattern = strtolower(preg_replace(array('/\bd\b/', '/\bM\b/', '/\by{1,2}\b/', '/\by{3,}\b/'), array('dd', 'mm', 'yy', 'yyyy'), $pattern));
         
         $builder->setAttribute('inputmask', $options['inputmask'] === true ? preg_replace('/\w/', '9', $pattern) : $options['inputmask']);
         $builder->setAttribute('placeholder', $options['placeholder'] === true ? $pattern : $options['placeholder']);
@@ -49,7 +49,7 @@ class DateType extends BaseType
      */
     public function getDefaultOptions(array $options)
     {
-        $date_pattern = preg_replace('/\byy?\b/', 'yyyy', datefmt_get_pattern(datefmt_create(\Locale::getDefault(), \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE, \DateTimeZone::UTC, \IntlDateFormatter::GREGORIAN)));
+        $date_pattern = preg_replace('/\byy?\b/', 'yyyy', \IntlDateFormatter::create(\Locale::getDefault(), \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE, \DateTimeZone::UTC, \IntlDateFormatter::GREGORIAN)->getPattern());
 
         return array(
             'widget' => 'single_text',

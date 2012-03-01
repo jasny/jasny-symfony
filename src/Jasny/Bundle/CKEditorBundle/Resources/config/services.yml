@@ -1,0 +1,8 @@
+services:
+    ckeditor.kcfinder:
+        class: Jasny\Bundle\CKEditorBundle\Services\KCFinder
+        arguments: ['@service_container', %jasny_ckeditor.upload_dir%]
+    form.type.ckeditor:
+        class: Jasny\Bundle\CKEditorBundle\Form\Type\CKEditorType
+        tags:
+            - { name: form.type, alias: ckeditor }

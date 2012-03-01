@@ -7,3 +7,16 @@ services:
         class: Jasny\Bundle\FrameworkBundle\Form\Type\DateTimeType
         tags:
             - { name: form.type, alias: datetime }
+    form.type.editor:
+        class: Jasny\Bundle\FrameworkBundle\Form\Type\EditorType
+        tags:
+            - { name: form.type, alias: editor }
+    
+    twig.extension.pcre:
+        class: Jasny\Bundle\FrameworkBundle\Twig\PcreExtension
+        tags:
+            - { name: twig.extension }
+    twig.extension.localdate:
+        class: Jasny\Bundle\FrameworkBundle\Twig\LocalDateExtension
+        tags:
+            - { name: twig.extension }

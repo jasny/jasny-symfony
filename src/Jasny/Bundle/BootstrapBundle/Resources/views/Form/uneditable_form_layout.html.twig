@@ -20,15 +20,23 @@
 {% block textarea_widget %}
 {% spaceless %}
     {% set attr = attr|merge({'class' : attr.class|default('') ~ ' uneditable-textarea' }) %}
-
-    {# Twig doesn't support regular expressions, so using a replace to check if textarea is an editor #}
-    {% if (attr.class is defined) and ((' ' ~ attr.class ~ ' ')|replace({' editor ': ' <~CHECK!~> '}) != (' ' ~ attr.class ~ ' ')) %}
-        <div {{ block('widget_attributes') }}>{{ value|raw }}</div>
-    {% else %}
-        <span {{ block('widget_attributes') }}>{{ value }}</span>
-    {% endif %}
+    <div {{ block('widget_attributes') }}>{{ value }}</div>
 {% endspaceless %}
 {% endblock textarea_widget %}
+
+{% block editor_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' uneditable-input editor'}) %}
+    <div {{ block('widget_attributes') }}>{{ value }}</div>
+{% endspaceless %}
+{% endblock editor_widget %}
+
+{% block ckeditor_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' uneditable-input editor editor-ckeditor'}) %}
+    <div {{ block('widget_attributes') }}>{{ value|raw }}</div>
+{% endspaceless %}
+{% endblock ckeditor_widget %}
 
 {% block widget_choice_single_option %}
 {% spaceless %}

@@ -24,6 +24,21 @@
 {% endspaceless %}
 {% endblock textarea_widget %}
 
+{% block editor_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' editor'}) %}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+{% endspaceless %}
+{% endblock editor_widget %}
+
+{% block ckeditor_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' editor editor-ckeditor'}) %}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+    {{ javascript|raw }}
+{% endspaceless %}
+{% endblock ckeditor_widget %}
+
 {% block widget_choice_options %}
 {% spaceless %}
     {% for choice, label in options %}
