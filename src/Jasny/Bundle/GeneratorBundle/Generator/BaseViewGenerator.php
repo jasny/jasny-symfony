@@ -95,7 +95,7 @@ class BaseViewGenerator extends Generator
             }
         }
         
-        $line = "<li class=\"{% if app.request.attributes.get('_route') == '$route' %}active{% endif %}\"><a href=\"{{ path('$route') }}\">" . ucwords($title) . "</a></li>\n";
+        $line = "<li class=\"{% if app.request.attributes.get('_route')|preg_replace('/\\\\..*$/') == '$route' %}active{% endif %}\"><a href=\"{{ path('$route') }}\">" . ucwords($title) . "</a></li>\n";
         file_put_contents($dir.'/nav.html.twig', $line, FILE_APPEND);
         
         return true;

@@ -33,11 +33,13 @@
 {% for field, metadata in fields %}
                     <td class="{{ metadata.type }}-type">
 {%   if metadata.type == 'date' %}
-                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'d-m-Y\') }}{% endif %}' }}
+                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|localdate }}{% endif %}' }}
+{%   elseif metadata.type == 'time' %}
+                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|localtime }}{% endif %}' }}
 {%   elseif metadata.type == 'datetime' %}
-                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'d-m-Y H:i:s\') }}{% endif %}' }}
+                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|localdatetime }}{% endif %}' }}
 {%   elseif metadata.type == 'boolean' %}
-                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}yes{% else %}no{% endif %}' }}
+                        {{ '{% if entity.'~ field|replace({'_': ''}) ~' %}'~ 'Yes'|trans ~'{% else %}'~ 'No'|trans ~'{% endif %}' }}
 {%   elseif metadata.type == 'percentage' %}
                         {{ '{% if entity.'~ field|replace({'_': ''}) ~' is not empty %}{{ entity.'~ field|replace({'_': ''}) ~' * 100 }} %{% endif %}' }}
 {%   else %}

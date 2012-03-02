@@ -22,7 +22,7 @@
                 </thead>
                 <tbody>
                 {{ '{% for entity in entities %}' }}
-                    <tr class="{{ "{{ cycle(['odd', 'even'], loop.index) }}" }}" {% if 'show' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': entity.id }) }}" }}"{% elseif 'edit' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}"{% endif %}>
+                    <tr class="{{ "{{ cycle(['odd', 'even'], loop.index) }}" }}" {% if 'show' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~".show', { 'id': entity.id }) }}" }}"{% elseif 'edit' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~".edit', { 'id': entity.id }) }}" }}"{% endif %}>
 {% for field, metadata in fields %}
                         <td class="{{ metadata.type }}-type">
 {%   if metadata.type == 'date' %}
@@ -40,7 +40,7 @@
 {% endfor %}
 {% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
                         <td class="row-actions nohref">
-                            <a class="act danger icon icon-only delete" href="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete-id="{{ '{{ entity.id }}' }}" data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}" {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}>{% trans %}Delete{% endtrans %}</a>
+                            <a class="act danger icon icon-only delete" href="{{ "{{ path('"~ route_name_prefix ~".delete', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete-id="{{ '{{ entity.id }}' }}" data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}" {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}>{% trans %}Delete{% endtrans %}</a>
                         </td>
 {% endif %}
                     </tr>
@@ -51,18 +51,18 @@
 {% if pagination %}
             <div class="pagination">
                 <ul>
-                    {{ '{% if page == 1 %}' }}<li class="prev disabled"><a href="#">{{ '{% else %}' }}<li class="prev"><a href="{{ "{{ path('"~ route_name_prefix ~"_page', { 'page': page-1 }) }}" }}">{{ '{% endif %}' }}&larr; {{ 'Previous'|trans }}</a></li>
+                    {{ '{% if page == 1 %}' }}<li class="prev disabled"><a href="#">{{ '{% else %}' }}<li class="prev"><a href="{{ "{{ path('"~ route_name_prefix ~"', { 'page': page-1 }) }}" }}">{{ '{% endif %}' }}&larr; {{ 'Previous'|trans }}</a></li>
                     {{ '{% for i in 1..pagecount %}' }}
-                        <li class="{{ '{% if i == page %}' }}active{{ '{% endif %}' }}"><a href="{{ "{{ path('"~ route_name_prefix ~"_page', { 'page': i }) }}" }}">{{ '{{ i }}' }}</a></li>
+                        <li class="{{ '{% if i == page %}' }}active{{ '{% endif %}' }}"><a href="{{ "{{ path('"~ route_name_prefix ~"', { 'page': i }) }}" }}">{{ '{{ i }}' }}</a></li>
                     {{ '{% endfor %}' }}
-                    {{ '{% if page == pagecount %}' }}<li class="next disabled"><a href="#">{{ '{% else %}' }}<li class="next"><a href="{{ "{{ path('"~ route_name_prefix ~"_page', { 'page': page+1 }) }}" }}">{{ '{% endif %}' }}{{ 'Next'|trans }} &rarr;</a></li>
+                    {{ '{% if page == pagecount %}' }}<li class="next disabled"><a href="#">{{ '{% else %}' }}<li class="next"><a href="{{ "{{ path('"~ route_name_prefix ~"', { 'page': page+1 }) }}" }}">{{ '{% endif %}' }}{{ 'Next'|trans }} &rarr;</a></li>
                 </ul>
             </div>
 
 {% endif %}
 {% if 'new' in actions %}
             <div class="table-actions">
-                <a href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}" class="btn btn-success pull-right"><i class="iconic-plus"></i> {{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
+                <a href="{{ "{{ path('"~ route_name_prefix ~".new') }}" }}" class="btn btn-success pull-right"><i class="iconic-plus"></i> {{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
             </div>
 
 {% endif %}

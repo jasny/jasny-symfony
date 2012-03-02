@@ -3,7 +3,7 @@
      * Finds and displays a {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}", name="{{ route_name_prefix }}_show")
+     * @Route("/{id}", name="{{ route_name_prefix }}.show")
      * @Template()
 {% endif %}
      */
@@ -26,42 +26,19 @@
 {% if ('delete' in actions) %}
         $deleteForm = $this->createDeleteForm($id);
 
-{%   if 'annotation' == format %}
-        return array(
-            'entity'      => $entity,
-            'form'        => $form->createView(),
-            'delete_form' => $deleteForm->createView(),
-{%     if 'index' not in actions %}
-            'list'   => $list,
-{%     endif %}
-        );
-{%   else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
-            'entity'      => $entity,
-            'form'        => $form->createView(),
-            'delete_form' => $deleteForm->createView(),
-{%     if 'index' not in actions %}
-            'list'   => $list,
-{%     endif %}
-        ));
-{%   endif %}
-{% else %}
-{%   if 'annotation' == format %} 
-        return array(
-            'entity' => $entity,
-            'form'   => $editForm->createView(),
-{%     if 'index' not in actions %}
-            'list'   => $list,
-{%     endif %}
-        );
-{%   else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-{%     if 'index' not in actions %}
-            'list'   => $list,
-{%     endif %}
-        ));
-{%   endif %}
 {% endif %}
+{% if 'annotation' == format %}
+        return array(
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
+{% endif %}
+            'entity'      => $entity,
+            'form'        => $form->createView(),
+{% if ('delete' in actions) %}
+            'delete_form' => $deleteForm->createView(),
+{% endif %}
+{% if 'index' not in actions %}
+            'list'   => $list,
+{% endif %}
+        {{ 'annotation' == format ? ')' : '))' }};
     }

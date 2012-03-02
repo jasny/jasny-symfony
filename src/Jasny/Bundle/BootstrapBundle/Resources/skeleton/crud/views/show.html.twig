@@ -34,7 +34,7 @@
 {% if ('edit' in actions) or ('delete' in actions) %}
                 <div class="form-actions">
 {%   if 'edit' in actions %}
-                    <a href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}" class="btn"><i class="iconic-pen"></i> {{ 'Edit %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
+                    <a href="{{ "{{ path('"~ route_name_prefix ~".edit', { 'id': entity.id }) }}" }}" class="btn"><i class="iconic-pen"></i> {{ 'Edit %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
 {%   endif %}
 {%   if 'delete' in actions %}
                     <a href="#" class="act act-danger pull-right" data-toggle="modal" data-target="#{{ prefix }}-delete-modal"><i class="iconic-x"></i> {{ 'Delete %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>

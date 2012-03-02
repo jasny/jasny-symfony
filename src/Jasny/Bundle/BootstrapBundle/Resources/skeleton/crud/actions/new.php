@@ -3,7 +3,8 @@
      * Displays a form to create a new {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/new", name="{{ route_name_prefix }}_new")
+     * @Route("/new", name="{{ route_name_prefix }}.new")
+     * @Method("get")
      * @Template()
 {% endif %}
      */
@@ -15,6 +16,8 @@
         return $this->displayNewView($entity, $form);
     }
     
+{%- include 'actions/create.php' -%}
+    
     private function displayNewView($entity, $form)
     {
 {% if 'index' not in actions %}
@@ -24,19 +27,13 @@
 {% endif %}    
 {% if 'annotation' == format %}
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-{%     if 'index' not in actions %}
-            'list'   => $list,
-{%     endif %}
-        );
 {% else %}
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:new.html.twig', array(
+{% endif %}
             'entity' => $entity,
             'form'   => $form->createView(),
-{%     if 'index' not in actions %}
+{% if 'index' not in actions %}
             'list'   => $list,
-{%     endif %}
-        ));
 {% endif %}
+        {{ 'annotation' == format ? ')' : '))' }};
     }

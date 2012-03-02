@@ -4,7 +4,7 @@
 {{ "{% block title %}" }}{{ 'Edit %s%'|trans({ '%s%': entity_desc.singular})|capitalize }}{% if stringable %} - {{ '{{ entity }}' }}{% endif %}{{ "{% endblock %}" }}
 
 {{ "{% block javascripts %}" }}
-    {{ '{{ base.prevent_unload_js("#' ~ prefix ~ '-form", "' ~ "The changes have not yet been saved. If you navigate away, they will be lost."|trans ~ '", dirty|default(false)) }}' }}
+    {{ '{{ base.prevent_unload_js("#' ~ prefix ~ '-form", "' ~ "The changes have not yet been saved. If you navigate away, they will be lost."|trans ~ '", form.dirty|default(false)) }}' }}
 {{ "{% endblock %}" }}
 
 {{ "{% block body %}" }}
@@ -27,7 +27,7 @@
         <section id="{{ prefix }}-details" class="entity-details edit-entity">
             {{ '{% if form.get(\'errors\') %}<div class="alert alert-error">{{ form_errors(form) }}</div>{% endif %}' }}
 
-            <form class="form-horizontal" action="{{ "{{ path('"~ route_name_prefix ~"_update', { 'id': entity.id }) }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+            <form class="form-horizontal" action="{{ "{{ path('"~ route_name_prefix ~".update', { 'id': entity.id }) }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
 {% if custom_form %}
                 {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
 {% else %}
@@ -37,7 +37,7 @@
                 <div class="form-actions">
                     <button class="btn btn-primary" type="submit">{{ 'Save'|trans }}</button>
 {% if ('index' in actions) or ('show' in actions) %}
-                    <a href="{{ "{{ path('"~ route_name_prefix ~ ('show' in actions ? "_show', { 'id': entity.id })" : "')") ~" }}" }}" class="btn cancel">{{ 'Cancel'|trans }}</a>
+                    <a href="{{ "{{ path('"~ route_name_prefix ~ ('show' in actions ? ".show', { 'id': entity.id })" : "')") ~" }}" }}" class="btn cancel">{{ 'Cancel'|trans }}</a>
 {% endif %}
 {% if ('delete' in actions) and ('show' not in actions) %}
                     <a href="#" class="act act-danger pull-right" data-toggle="modal" data-target="#{{ prefix }}-delete-modal"><i class="iconic-x"></i> {{ 'Delete %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>

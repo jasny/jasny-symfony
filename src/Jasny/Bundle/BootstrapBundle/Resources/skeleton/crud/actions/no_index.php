@@ -15,15 +15,15 @@
 
         if (!$entity) {
 {% if 'new' in actions %}
-            return $this->redirect($this->generateUrl('{{ route_name_prefix }}_new'));
+            return $this->redirect($this->generateUrl('{{ route_name_prefix }}.new'));
 {% else %}
             throw $this->createNotFoundException('Unable to find any {{ entity_desc.plural }}.');
 {% endif %}
         }
         
 {% if 'show' in actions %}
-        return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $entity->getId())));
+        return $this->redirect($this->generateUrl('{{ route_name_prefix }}.show', array('id' => $entity->getId())));
 {% elseif 'edit' in actions %}
-        return $this->redirect($this->generateUrl('{{ route_name_prefix }}_edit', array('id' => $entity->getId())));
+        return $this->redirect($this->generateUrl('{{ route_name_prefix }}.edit', array('id' => $entity->getId())));
 {% endif %}
     }

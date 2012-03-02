@@ -1,8 +1,0 @@
-<Files *>
-    Order allow,deny
-    Deny from all
-</Files>
-<Files ~ "\.(css|js|gif|png|eot|svg|tff|woff)$">
-    Order allow,deny
-    Allow from all
-</Files>

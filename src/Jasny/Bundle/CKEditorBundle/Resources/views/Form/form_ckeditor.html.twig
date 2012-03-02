@@ -1,0 +1,7 @@
+{% block ckeditor_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' editor editor-ckeditor'}) %}
+    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+    {{ javascript|raw }}
+{% endspaceless %}
+{% endblock ckeditor_widget %}

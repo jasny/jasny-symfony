@@ -52,7 +52,7 @@ class PcreExtension extends \Twig_Extension
      * @param int    $limit
      * @return string
      */
-    public function replace($value, $pattern, $replacement, $limit=-1)
+    public function replace($value, $pattern, $replacement='', $limit=-1)
     {
         if (preg_match('/(.).*\1(.+)$/', trim($pattern), $match) && strpos($match[1], 'e') !== false) throw new Exception("Using the eval modifier for regular expressions is not allowed");
         return preg_replace($pattern, $replacement, $value, $limit);

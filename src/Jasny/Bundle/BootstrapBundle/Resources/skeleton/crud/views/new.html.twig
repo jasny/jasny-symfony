@@ -4,7 +4,7 @@
 {{ "{% block title %}" }}{{ 'Edit %s%'|trans({ '%s%': entity_desc.singular})|capitalize }}{{ "{% endblock %}" }}
 
 {{ "{% block javascripts %}" }}
-    {{ '{{ base.prevent_unload_js("#' ~ prefix ~ '-form", "' ~ "This new %s% has not yet been saved. If you navigate away, it will be lost."|trans({'%s%': entity_desc.singular}) ~ '", dirty|default(false)) }}' }}
+    {{ '{{ base.prevent_unload_js("#' ~ prefix ~ '-form", "' ~ "This new %s% has not yet been saved. If you navigate away, it will be lost."|trans({'%s%': entity_desc.singular}) ~ '", form.dirty|default(false)) }}' }}
 {{ "{% endblock %}" }}
 
 {{ "{% block body %}" }}    
@@ -23,7 +23,7 @@
         <section id="{{ prefix }}-details" class="entity-details new-entity">
             {{ '{{ form_errors(form) }}' }}
 
-            <form id="{{ prefix }}-form" class="form-horizontal" action="{{ "{{ path('"~ route_name_prefix ~"_create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+            <form id="{{ prefix }}-form" class="form-horizontal" action="{{ "{{ path('"~ route_name_prefix ~".create') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
 {% if custom_form %}
                 {{ "{% include '" ~ bundle ~ ":" ~ entity ~":includes/form.html.twig' %}" }}
 {% else %}

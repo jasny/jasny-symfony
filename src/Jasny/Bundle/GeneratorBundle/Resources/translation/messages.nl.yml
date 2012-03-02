@@ -1,10 +1,14 @@
 # controller
-Saved %s%: %s% is opgeslagen
+Saved the %s%: De %s% is opgeslagen
 Saved %s% '$entity': %s% '$entity' is opgeslagen
-Deleted %s%: %s% is verwijderd
+Failed to save the %s%: Het opslaan van de %s% is mislukt
+Failed to save %s% '$entity': Het opslaan van %s% '$entity' is mislukt
+Deleted the %s%: De %s% is verwijderd
 Deleted %s% '$entity': %s% '$entity' is verwijderd
 
 # views
+Yes: Ja
+No: Nee
 Add: Toevoegen
 Add %s%: %s% toevoegen
 Edit: Bewerken

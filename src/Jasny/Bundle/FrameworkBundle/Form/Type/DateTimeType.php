@@ -34,11 +34,10 @@ class DateTimeType extends BaseType
     {
         if (isset($options['date_pattern'])) $options['date_format'] = $options['date_pattern'];
 
-        $format = is_string($options['date_format']) ? $options['date_format'] : datefmt_get_pattern(datefmt_create(\Locale::getDefault(), $options['format'], \IntlDateFormatter::NONE, \DateTimeZone::UTC, \IntlDateFormatter::GREGORIAN));
+        $format = is_string($options['date_format']) ? $options['date_format'] : \IntlDateFormatter::create(\Locale::getDefault(), $options['format'], \IntlDateFormatter::NONE, \DateTimeZone::UTC, \IntlDateFormatter::GREGORIAN)->getPattern();
         $format .= " hh:mm" . (empty($options['with_seconds']) ? '' : ':ss');
 
         $pattern = strtolower(preg_replace(array('/\bd\b/', '/\bM\b/', '/\by{1,2}\b/', '/\by{3,}\b/'), array('dd', 'mm', 'yy', 'yyyy'), $format));
-
         $builder->setAttribute('inputmask', $options['inputmask'] === true ? preg_replace('/\w/', '9', $pattern) : $options['inputmask']);
         $builder->setAttribute('placeholder', $options['placeholder'] === true ? $pattern : $options['placeholder']);
 
@@ -50,13 +49,13 @@ class DateTimeType extends BaseType
         $formatter = new \IntlDateFormatter(
             \Locale::getDefault(),
             \IntlDateFormatter::SHORT,
-            \IntlDateFormatter::NONE,
+            \IntlDateFormatter::SHORT,
             \DateTimeZone::UTC,
             \IntlDateFormatter::GREGORIAN,
-            $pattern
+            $format
         );
 
-        $builder->appendClientTransformer(new DateTimeToLocalizedStringTransformer($options['data_timezone'], $options['user_timezone'], \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE, \IntlDateFormatter::GREGORIAN, $format));
+        $builder->appendClientTransformer(new DateTimeToLocalizedStringTransformer($options['data_timezone'], $options['user_timezone'], \IntlDateFormatter::SHORT, \IntlDateFormatter::SHORT, \IntlDateFormatter::GREGORIAN, $format));
         
         if ($options['input'] === 'string') {
             $builder->appendNormTransformer(new ReversedTransformer(

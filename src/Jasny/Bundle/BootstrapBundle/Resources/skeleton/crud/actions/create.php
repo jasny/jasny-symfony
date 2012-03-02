@@ -3,9 +3,11 @@
      * Creates a new {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/create", name="{{ route_name_prefix }}_create")
+     * @Route("/new", name="{{ route_name_prefix }}.create")
      * @Method("post")
+{%   if 'new' in actions %}
      * @Template("{{ bundle }}:{{ entity }}:new.html.twig")
+{%   endif %}
 {% endif %}
      */
     public function createAction()
@@ -15,25 +17,33 @@
         $form    = $this->createForm(new {{ entity_class }}Type(), $entity);
         $form->bindRequest($request);
 
-        if (!$form->isValid()) {
-            return $this->displayNewView($entity, $form);
-        }
-        
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($entity);
-        $em->flush();
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($entity);
+            $em->flush();
 
 {% if stringable %}
-        $this->get('session')->setFlash('success', "{{ "Saved %s% '$entity'"|trans({'%s%': entity_desc.singular}) }}");
+            $this->get('session')->setFlash('success', "{{ "Saved %s% '$entity'"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {% else %}
-        $this->get('session')->setFlash('success', "{{ "Saved %s%"|trans({'%s%': entity_desc.singular}) }}");
+            $this->get('session')->setFlash('success', "{{ "Saved the %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {% endif %}
+        } else {
+{% if 'new' in actions %}
+            return $this->displayNewView($entity, $form);
+{% else %}
+{%   if stringable %}
+            $this->get('session')->setFlash('error', "{{ "Failed to save %s% '$entity'"|trans({'%s%': entity_desc.singular})|capitalize }}");
+{%   else %}
+            $this->get('session')->setFlash('error', "{{ "Failed to save the %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
+{%   endif %}
+{% endif %}
+        }
 
 {% if 'show' in actions %}
-        return $this->redirect($this->generateUrl('{{ route_name_prefix }}_show', array('id' => $entity->getId())));
+        return $this->redirect($this->generateUrl('{{ route_name_prefix }}.show', array('id' => $entity->getId())));
 {% elseif 'index' in actions %}
         return $this->redirect($this->generateUrl('{{ route_name_prefix }}'));
 {% else %}
-        return $this->redirect($this->generateUrl('{{ route_name_prefix }}_edit', array('id' => $entity->getId())));
+        return $this->redirect($this->generateUrl('{{ route_name_prefix }}.edit', array('id' => $entity->getId())));
 {% endif %}
     }

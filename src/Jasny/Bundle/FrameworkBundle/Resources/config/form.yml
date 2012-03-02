@@ -1,4 +1,8 @@
 services:
+    form.type.base_form:
+        class: Jasny\Bundle\FrameworkBundle\Form\BaseFormType
+        tags:
+            - { name: form.type, alias: base_form }
     form.type.date:
         class: Jasny\Bundle\FrameworkBundle\Form\Type\DateType
         tags:
@@ -11,12 +15,7 @@ services:
         class: Jasny\Bundle\FrameworkBundle\Form\Type\EditorType
         tags:
             - { name: form.type, alias: editor }
-    
-    twig.extension.pcre:
-        class: Jasny\Bundle\FrameworkBundle\Twig\PcreExtension
-        tags:
-            - { name: twig.extension }
-    twig.extension.localdate:
-        class: Jasny\Bundle\FrameworkBundle\Twig\LocalDateExtension
-        tags:
-            - { name: twig.extension }
+#twig:
+#    form:
+#        resources:
+#            - 'JasnyFrameworkBundle:Form:form_layout.html.twig'

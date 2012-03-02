@@ -3,7 +3,7 @@
     {%- set _d_entity = "''" %}
     {%- set _d_form   = "false" %}
 {% else %}
-    {%- set _d_action = "path('" ~ route_name_prefix ~ "_delete', { 'id': entity.id })" %}
+    {%- set _d_action = "path('" ~ route_name_prefix ~ ".delete', { 'id': entity.id })" %}
     {%- set _d_entity = "entity" %}
     {%- set _d_form   = "delete_form" %}
 {% endif %}

@@ -21,28 +21,30 @@ use {{ namespace }}\Form\{{ entity }}Type;
 class {{ entity_class }}Controller extends Controller
 {
 
-    {%- if 'index' in actions %}
-        {%- include 'actions/index.php' %}
-    {%- elseif ('show' in actions) or ('edit' in actions) %}
-        {%- include 'actions/no_index.php' %}
-    {%- endif %}
+    {%- if 'index' in actions -%}
+        {%- include 'actions/index.php' -%}
+    {%- elseif ('show' in actions) or ('edit' in actions) -%}
+        {%- include 'actions/no_index.php' -%}
+    {%- endif -%}
 
-    {%- if 'new' in actions %}
-        {%- include 'actions/new.php' %}
-        {%- include 'actions/create.php' %}
-    {%- endif %}
+    {%- if 'new' in actions -%}
+        {%- include 'actions/new.php' -%}
+    {%- elseif 'create' in actions -%}
+        {%- include 'actions/create.php' -%}
+    {%- endif -%}
 
-    {%- if 'show' in actions %}
-        {%- include 'actions/show.php' %}
-    {%- endif %}
+    {%- if 'show' in actions -%}
+        {%- include 'actions/show.php' -%}
+    {%- endif -%}
 
-    {%- if 'edit' in actions %}
-        {%- include 'actions/edit.php' %}
-        {%- include 'actions/update.php' %}
-    {%- endif %}
+    {%- if 'edit' in actions -%}
+        {%- include 'actions/edit.php' -%}
+    {%- elseif 'update' in actions -%}
+        {%- include 'actions/update.php' -%}
+    {%- endif -%}
 
-    {%- if 'delete' in actions %}
-        {%- include 'actions/delete.php' %}
-    {%- endif %}
+    {%- if 'delete' in actions -%}
+        {%- include 'actions/delete.php' -%}
+    {%- endif -%}
 
 }

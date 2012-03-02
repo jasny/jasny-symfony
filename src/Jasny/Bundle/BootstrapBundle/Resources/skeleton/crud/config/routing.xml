@@ -8,47 +8,47 @@
     <route id="{{ route_name_prefix }}" pattern="/">
         <default key="_controller">{{ bundle }}:{{ entity }}:index</default>
     </route>
+    
 {% endif %}
-
 {% if 'new' in actions %}
-    <route id="{{ route_name_prefix }}_new" pattern="/new">
+    <route id="{{ route_name_prefix }}.new" pattern="/new">
         <default key="_controller">{{ bundle }}:{{ entity }}:new</default>
+        <requirement key="_method">get</requirement>
     </route>
-
-    <route id="{{ route_name_prefix }}_create" pattern="/create">
+    
+{% endif %}
+{% if 'new' in actions or 'create' in actions %}
+    <route id="{{ route_name_prefix }}.create" pattern="/new">
         <default key="_controller">{{ bundle }}:{{ entity }}:create</default>
         <requirement key="_method">post</requirement>
     </route>
-{% endif %}
 
+{% endif %}
 {% if 'show' in actions %}
-    <route id="{{ route_name_prefix }}_show" pattern="/{id}/">
+    <route id="{{ route_name_prefix }}.show" pattern="/{id}/">
         <default key="_controller">{{ bundle }}:{{ entity }}:show</default>
     </route>
-{% endif %}
 
+{% endif %}
 {% if 'edit' in actions %}
-{% if 'show' in actions %}
-    <route id="{{ route_name_prefix }}_edit" pattern="/{id}/edit">
+    <route id="{{ route_name_prefix }}.edit" pattern="{{ 'show' in actions ? '/{id}/edit' : '/{id}/' }}">
         <default key="_controller">{{ bundle }}:{{ entity }}:edit</default>
+        <requirement key="_method">get</requirement>
     </route>
-{% else %}
-    <route id="{{ route_name_prefix }}_edit" pattern="/{id}/">
-        <default key="_controller">{{ bundle }}:{{ entity }}:edit</default>
-    </route>
-{% endif %}
 
-    <route id="{{ route_name_prefix }}_update" pattern="/{id}/update">
+{% endif %}
+{% if 'edit' in actions or 'update' in actions %}
+    <route id="{{ route_name_prefix }}_update" pattern="{{ 'show' in actions ? '/{id}/edit' : '/{id}/' }}">
         <default key="_controller">{{ bundle }}:{{ entity }}:update</default>
         <requirement key="_method">post</requirement>
     </route>
-{% endif %}
 
+{% endif %}
 {% if 'delete' in actions %}
     <route id="{{ route_name_prefix }}_delete" pattern="/{id}/delete">
         <default key="_controller">{{ bundle }}:{{ entity }}:delete</default>
         <requirement key="_method">post</requirement>
     </route>
-{% endif %}
 
+{% endif %}
 </routes>
