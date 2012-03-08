@@ -1,7 +1,7 @@
-JASNY_REPO = http://github.com/jasny/jasny-symfony.git
+JASNY_REPO = git://github.com/jasny/jasny-symfony.git
 JASNY_TAG = HEAD
 TWIG_REPO = http://github.com/fabpot/Twig.git
-TWIG_TAG = v1.4.0
+TWIG_TAG = v1.6.0
 
 all: install
 
