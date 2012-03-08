@@ -1,4 +1,8 @@
 services:
+    twig.extension.text:
+        class: Jasny\Bundle\FrameworkBundle\Twig\TextExtension
+        tags:
+            - { name: twig.extension }
     twig.extension.pcre:
         class: Jasny\Bundle\FrameworkBundle\Twig\PcreExtension
         tags:

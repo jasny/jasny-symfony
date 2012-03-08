@@ -11,8 +11,6 @@
 
 namespace Jasny\Bundle\FrameworkBundle\Twig;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * Expose the pcre functions to Twig
  * 
@@ -28,11 +26,12 @@ class PcreExtension extends \Twig_Extension
         return array(
             'preg_match' => new \Twig_Filter_Method($this, 'match'),
             'preg_replace' => new \Twig_Filter_Method($this, 'replace'),
+            'preg_split' => new \Twig_Filter_Method($this, 'split'),
         );
     }
 
     /**
-     * Perform a regular expression match
+     * Perform a regular expression match.
      * 
      * @param string $value
      * @param string $pattern
@@ -44,7 +43,7 @@ class PcreExtension extends \Twig_Extension
     }
 
     /**
-     * Perform a regular expression search and replace
+     * Perform a regular expression search and replace.
      * 
      * @param string $value
      * @param string $pattern
@@ -56,6 +55,18 @@ class PcreExtension extends \Twig_Extension
     {
         if (preg_match('/(.).*\1(.+)$/', trim($pattern), $match) && strpos($match[1], 'e') !== false) throw new Exception("Using the eval modifier for regular expressions is not allowed");
         return preg_replace($pattern, $replacement, $value, $limit);
+    }
+
+    /**
+     *Split text into an array using a regular expression.
+     * 
+     * @param string $value
+     * @param string $pattern
+     * @return array
+     */
+    public function split($value, $pattern)
+    {
+        return preg_split($pattern, $value);
     }
     
     /**
