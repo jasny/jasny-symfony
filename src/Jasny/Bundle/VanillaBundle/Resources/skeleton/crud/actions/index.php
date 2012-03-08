@@ -14,22 +14,16 @@
         $entities = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findAll();
 {% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
         $deleteTokens = $this->createDeleteTokens($entities);
-        
-{%   if 'annotation' == format %}
-        return array('entities' => $entities, 'delete_tokens' => $delete_tokens);
-{%   else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
-            'entities' => $entities,
-            'delete_tokens' => $deleteTokens,
-        ));
-{%   endif %}
-{% else %}
-{%   if 'annotation' == format %}
-        return array('entities' => $entities);
-{%   else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
-            'entities' => $entities,
-        ));
-{%   endif %}
 {% endif %}
+        
+{% if 'annotation' == format %}
+        return array(
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
+{% endif %}
+            'entities' => $entities,
+{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
+            'delete_tokens' => $deleteTokens,
+{% endif %}
+        ){% if 'annotation' != format %}){% endif %};
     }

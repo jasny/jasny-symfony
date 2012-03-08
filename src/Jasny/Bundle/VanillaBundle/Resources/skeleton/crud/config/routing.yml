@@ -2,43 +2,46 @@
 {{ route_name_prefix }}:
     pattern:  /
     defaults: { _controller: "{{ bundle }}:{{ entity }}:index" }
-{% endif %}
 
+{% endif %}
 {% if 'new' in actions %}
-{{ route_name_prefix }}_new:
+{{ route_name_prefix }}.new:
     pattern:  /new
     defaults: { _controller: "{{ bundle }}:{{ entity }}:new" }
+    requirements: { _method: get }
 
-{{ route_name_prefix }}_create:
+{% endif %}
+{% if 'new' in actions or 'create' in actions %}
+{{ route_name_prefix }}.create:
     pattern:  /create
     defaults: { _controller: "{{ bundle }}:{{ entity }}:create" }
     requirements: { _method: post }
-{% endif %}
 
+{% endif %}
 {% if 'show' in actions %}
-{{ route_name_prefix }}_show:
+{{ route_name_prefix }}.show:
     pattern:  /{id}/
     defaults: { _controller: "{{ bundle }}:{{ entity }}:show" }
-{% endif %}
 
+{% endif %}
 {% if 'edit' in actions %}
-{{ route_name_prefix }}_edit:
-{% if 'show' in actions %}  
-    pattern:  /{id}/edit
-{% else %}
-    pattern:  /{id}/
-{% endif %}
+{{ route_name_prefix }}.edit:
+    pattern:  {% if 'show' in actions %}/{id}/edit{% else %}/{id}/{% endif %}
     defaults: { _controller: "{{ bundle }}:{{ entity }}:edit" }
+    requirements: { _method: get }
 
-{{ route_name_prefix }}_update:
-    pattern:  /{id}/update
+{% endif %}
+{% if 'edit' in actions or 'update' in actions %}
+{{ route_name_prefix }}.update:
+    pattern:  {% if 'show' in actions %}/{id}/edit{% else %}/{id}/{% endif %}
     defaults: { _controller: "{{ bundle }}:{{ entity }}:update" }
     requirements: { _method: post }
-{% endif %}
 
+{% endif %}
 {% if 'delete' in actions %}
-{{ route_name_prefix }}_delete:
+{{ route_name_prefix }}.delete:
     pattern:  /{id}/delete
     defaults: { _controller: "{{ bundle }}:{{ entity }}:delete" }
     requirements: { _method: post }
+
 {% endif %}

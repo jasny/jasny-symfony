@@ -8,8 +8,16 @@
     {%- set _d_form   = "delete_form" %}
 {% endif %}
 
+{{ "{% block modals %}" }}
 {%- if stringable %}
-        {{ "{{ base.delete_modal('" ~ prefix ~ "', " ~ _d_action ~ " , \"" ~ "Are you sure you want to delete %s% '%entity%'?"|trans({'%s%': entity_desc.singular}) ~ "\", " ~ _d_entity ~ ", " ~ _d_form ~ ") }}" }}
-{% else %}
-        {{ "{{ base.delete_modal('" ~ prefix ~ "', " ~ _d_action ~ " , \"" ~ "Are you sure you want to delete this %s%?"|trans({'%s%': entity_desc.singular}) ~ "\", '', " ~ _d_form ~ ") }}" }}
-{% endif -%}
+    {{ "{{ base.delete_modal('" ~ prefix ~ "', " ~ _d_action ~ " , \"" ~ "Are you sure you want to delete %s% '%entity%'?"|trans({'%s%': entity_desc.singular}) ~ "\", " ~ _d_entity ~ ", " ~ _d_form ~ ") }}" }}
+{%- else %}
+    {{ "{{ base.delete_modal('" ~ prefix ~ "', " ~ _d_action ~ " , \"" ~ "Are you sure you want to delete this %s%?"|trans({'%s%': entity_desc.singular}) ~ "\", '', " ~ _d_form ~ ") }}" }}
+{%- endif -%}
+{{ "{% endblock %}" }}
+
+{%- if delete_js -%}
+{{ "{% block javascripts %}" }}
+    {{ "{{ base.delete_modal_js('" ~ prefix ~ "') }}" }}
+{{ "{% endblock %}" }}
+{%- endif %}

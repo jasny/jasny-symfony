@@ -39,20 +39,20 @@
             {% endif %}{% endraw %}
        </form>
     </div>
-
-    {% raw %}{% if form %}
-        <script type="text/javascript">
-            $(function () {
-                $('#{{ prefix }}-records-list .row-actions a.delete').click(function() {
-                    $('#{{ prefix }}-delete-modal form').attr('action', $(this).attr('href'));
-                    $('#{{ prefix }}-delete-modal input[name="form[id]"]').val($(this).attr('data-delete-id'));
-                    $('#{{ prefix }}-delete-modal input[name="form[_token]"]').val($(this).attr('data-delete-token'));
-                    $('#{{ prefix }}-delete-modal .delete-entity').html($(this).attr('data-delete-desc'));
-
-                    $('#{{ prefix }}-delete-modal').modal('show');
-                    return false;
-                });
-            });
-        </script>
-    {% endif %}{% endraw %}
 {{ '{% endmacro %}' }}
+
+{% raw %}{% macro delete_modal_js(prefix) %}
+    <script type="text/javascript">
+        $(function () {
+            $('*[data-delete={{ prefix }}]').click(function() {
+                $('#{{ prefix }}-delete-modal form').attr('action', $(this).attr('href'));
+                $('#{{ prefix }}-delete-modal input[name="form[id]"]').val($(this).attr('data-delete-id'));
+                $('#{{ prefix }}-delete-modal input[name="form[_token]"]').val($(this).attr('data-delete-token'));
+                $('#{{ prefix }}-delete-modal .delete-entity').html($(this).attr('data-delete-desc'));
+
+                $('#{{ prefix }}-delete-modal').modal('show');
+                return false;
+            });
+        });
+    </script>
+{% endmacro %}{% endraw %}

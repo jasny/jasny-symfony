@@ -9,7 +9,7 @@
         </div>
 
         <section id="{{ prefix }}-list" class="entity-list">
-            <table id="{{ prefix }}-records-list" class="table table-bordered table-striped records-list">
+            <table id="{{ prefix }}-records" class="table table-bordered table-striped records-list">
                 <thead>
                     <tr>
 {% for field, metadata in fields %}
@@ -39,8 +39,8 @@
                         </td>
 {% endfor %}
 {% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
-                        <td class="row-actions nohref">
-                            <a class="act danger icon icon-only delete" href="{{ "{{ path('"~ route_name_prefix ~".delete', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete-id="{{ '{{ entity.id }}' }}" data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}" {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}>{% trans %}Delete{% endtrans %}</a>
+                        <td class="row-actions nohref" style="white-space: nowrap">
+                            <a class="act act-danger" href="{{ "{{ path('"~ route_name_prefix ~".delete', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete="{{ prefix }}" data-delete-id="{{ '{{ entity.id }}' }}" {{ '{% if delete_tokens is defined %}' }}data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}"{{ '{% endif %}' }} {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}><i class="iconic-x"></i></a>
                         </td>
 {% endif %}
                     </tr>
@@ -70,6 +70,5 @@
 {{ '{% endblock %}' }}
 
 {% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
-        {%- set delete_js, delete_js = true, false %}
-        {%- include 'views/others/delete_modal.html.twig' %}
+    {%- include 'views/others/delete_modal.html.twig' with {'delete_js': true} %}
 {% endif %}

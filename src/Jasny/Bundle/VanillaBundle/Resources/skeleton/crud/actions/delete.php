@@ -3,7 +3,7 @@
      * Deletes a {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}/delete", name="{{ route_name_prefix }}_delete")
+     * @Route("/{id}/delete", name="{{ route_name_prefix }}.delete")
      * @Method("post")
 {% endif %}
      */
@@ -28,7 +28,7 @@
 {% if stringable %}
         $this->get('session')->setFlash('notice', "{{ "Deleted %s% '$entity'"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {% else %}
-        $this->get('session')->setFlash('notice', "{{ "Deleted %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
+        $this->get('session')->setFlash('notice', "{{ "Deleted the %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {% endif %}
         }
 
@@ -43,7 +43,7 @@
         ;
     }
     
-{% if ('index' in actions) %}
+{% if ('index' in actions) and ('show' not in actions) and ('edit' not in actions) %}
     private function createDeleteTokens($entities)
     {
         $tokens = array();

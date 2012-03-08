@@ -3,7 +3,7 @@
      * Finds and displays a {{ entity }} entity.
      *
 {% if 'annotation' == format %}
-     * @Route("/{id}", name="{{ route_name_prefix }}_show")
+     * @Route("/{id}", name="{{ route_name_prefix }}.show")
      * @Template()
 {% endif %}
      */
@@ -17,29 +17,28 @@
             throw $this->createNotFoundException('Unable to find {{ entity_desc.singular }}.');
         }
 
+        $form = $this->createForm(new {{ entity_class }}Type(), $entity, array('read_only'=>true));
+        
+{% if 'index' not in actions %}
+        $list = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findAll();
+
+{% endif %}    
 {% if ('delete' in actions) %}
         $deleteForm = $this->createDeleteForm($id);
 
-{%   if 'annotation' == format %}
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
-{%   else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        ));
-{%   endif %}
-{% else %}
-{%   if 'annotation' == format %} 
-        return array(
-            'entity' => $entity,
-        );
-{%   else %}
-        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
-            'entity' => $entity,
-        ));
-{%   endif %}
 {% endif %}
+{% if 'annotation' == format %}
+        return array(
+{% else %}
+        return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:show.html.twig', array(
+{% endif %}
+            'entity'      => $entity,
+            'form'        => $form->createView(),
+{% if ('delete' in actions) %}
+            'delete_form' => $deleteForm->createView(),
+{% endif %}
+{% if 'index' not in actions %}
+            'list'   => $list,
+{% endif %}
+        {{ 'annotation' == format ? ')' : '))' }};
     }
