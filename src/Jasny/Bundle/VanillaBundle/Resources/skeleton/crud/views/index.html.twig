@@ -1,35 +1,31 @@
 {{ "{% extends '" ~ bundle ~ "::base.html.twig' %}" }}
 
+{%- if stringable %}
+    {%- set delete_message = "Are you sure you want to delete %s% '%entity%'?"|trans({'%s%': entity_desc.singular, '%entity%': '<strong class="delete-entity">' ~  _d_entity ~ '</strong>'}) -%}
+{%- else %}
+    {%- set delete_message = "Are you sure you want to delete this %s%?"|trans({'%s%': entity_desc.singular, '%entity%'}) -%}
+{%- endif %}
+
 {{ "{% block title %}"}}{{ entity_desc.plural|title }}{{ "{% endblock %}" }}
 
 {{ "{% block header %}" }}
     <h1>{{ entity_desc.plural|title }}</h1>
 {{ "{% endblock %}" }}
 
-{{ "{% block javascripts %}" }}
-    <script type="application/javascript">    
-        $(function () {
-            $('tr[data-href] > td').not('.nohref').click(function() { window.location = $(this).parent().attr('data-href'); });
-        })
-    </script>
-{{ "{% endblock %}" }}
-    
 {{ "{% block body %}" }}
     <section id="{{ prefix }}-list" class="entity-list">
-        <table id="{{ prefix }}-records-list" class="records-list">
+        <table class="records-list">
             <thead>
                 <tr>
 {% for field, metadata in fields %}
-                    <th class="{{ metadata.type }}-type">{{ field|replace({'_': ' '})|capitalize }}</th>
+                    <th class="type-{{ metadata.type }}">{{ field|replace({'_': ' '})|capitalize }}</th>
 {% endfor %}
-{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
                     <th class="row-actions"></th>
-{% endif %}
                 </tr>
             </thead>
             <tbody>
             {{ '{% for entity in entities %}' }}
-                <tr class="{{ "{{ cycle(['odd', 'even'], loop.index) }}" }}" {% if 'show' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': entity.id }) }}" }}"{% elseif 'edit' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}"{% endif %}>
+                <tr class="{{ "{{ cycle(['odd', 'even'], loop.index) }}" }}">
 {% for field, metadata in fields %}
                     <td class="{{ metadata.type }}-type">
 {%   if metadata.type == 'date' %}
@@ -47,11 +43,11 @@
 {%   endif %}
                     </td>
 {% endfor %}
-{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
-                    <td class="row-actions nohref">
-                        <a class="act danger icon icon-only delete" href="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete-id="{{ '{{ entity.id }}' }}" data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}" {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}>{% trans %}Delete{% endtrans %}</a>
+                    <td class="row-actions">
+                        {% if 'show' in actions %}<a class="action-show" href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': entity.id }) }}" }}" title="{{ 'Show %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}">{{ "Show"|trans }}</a>{% endif %}
+                        {% if 'edit' in actions %}<a class="action-edit" href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}" title="{{ 'Edit %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}">{{ "Edit"|trans }}</a>{% endif %}
+                        {% if 'list-delete' in actions %}<a class="action-delete" href="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id, 'token': attribute(delete_tokens, entity.id) }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" onclick="return window.alert(\"{{ delete_message}}\")">{{ "Delete"|trans }}</a>{% endif %}
                     </td>
-{% endif %}
                 </tr>
             {{ '{% endfor %}' }}
             </tbody>
@@ -71,27 +67,6 @@
         <div class="actions">
             <a href="{{ "{{ path('"~ route_name_prefix ~"_new') }}" }}">{{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
         </div>
-
-{% endif %}
-{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
-        {%- set delete_js, delete_js = true, false %}
-        {%- include 'views/others/delete_modal.html.twig' %}
-
-        <script type="text/javascript">
-            $(function () {
-                $('#{{ prefix }}-records-list .row-actions a.delete').click(function() {
-                    $('#{{ prefix }}-delete-modal form').attr('action', $(this).attr('href'));
-                    $('#{{ prefix }}-delete-modal input[name="form[id]"]').val($(this).attr('data-delete-id'));
-                    $('#{{ prefix }}-delete-modal input[name="form[_token]"]').val($(this).attr('data-delete-token'));
-{%   if stringable %}
-                    $('#{{ prefix }}-delete-modal .delete-entity').html($(this).attr('data-delete-desc'));
-{%   endif %}
-
-                    $('#{{ prefix }}-delete-modal').show();
-                    return false;
-                });
-            });
-        </script>
 
 {% endif %}
     </section>

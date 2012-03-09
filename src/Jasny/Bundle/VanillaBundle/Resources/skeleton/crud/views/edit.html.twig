@@ -33,11 +33,7 @@
         </form>
 
 {% if ('delete' in actions) and ('show' not in actions) %}
-        {%- set delete_js, delete_js = false, false %}
-        {%- include 'views/others/delete_modal.html.twig' %}
-
-        <a href="#" onclick="$('{{ prefix }}-delete-modal'.show())">{{ 'Delete %s'|trans({'%s': entity_desc.singular})|capitalize }}</a>
-
+        {%- include 'views/others/delete_form.html.twig' %}
 {% endif %}
     </section>
 {{ "{% endblock %}" }}

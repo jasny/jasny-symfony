@@ -27,7 +27,7 @@
         
         {{ "{% for type in ['error', 'notice', 'success'] %}" }}
             {{ "{% if app.session.hasFlash(type) %}" }}
-                <div class="flash-message {{ '{{ type }}' }}">
+                <div class="page-alert alert-{{ '{{ type }}' }}">
                     <p>{{ "{{ app.session.flash(type) }}" }}</p>
                 </div>
             {{ "{% endif %}" }}
@@ -48,7 +48,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
         <script src="{{ "{{ asset('bundles/jasnyvanilla/jquery.plugins.min.js') }}" }}" type="text/javascript"></script>
         <script type="text/javascript">
-            setTimeout(function(){ $(".flash-message").fadeOut() }, 5000);
+            setTimeout(function(){ $(".page-alert").fadeOut() }, 5000);
         </script>
         
         {{ "{% block javascripts %}" }}

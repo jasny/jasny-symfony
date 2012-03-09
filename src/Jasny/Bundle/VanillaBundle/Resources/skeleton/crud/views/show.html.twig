@@ -17,11 +17,13 @@
                 <tr>
                     <th>{{ field|replace({'_': ' '})|capitalize }}</th>
 {%   if metadata.type == 'date' %}
-                    <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'d-m-Y\') }}{% endif %}' }}</td>
+                    <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|localdate }}{% endif %}' }}</td>
+{%   elseif metadata.type == 'datime' %}
+                    <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|localtime }}{% endif %}' }}</td>
 {%   elseif metadata.type == 'datetime' %}
-                    <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|date(\'d-m-Y H:i:s\') }}{% endif %}' }}</td>
+                    <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}{{ entity.'~ field|replace({'_': ''}) ~'|localdatetime }}{% endif %}' }}</td>
 {%   elseif metadata.type == 'boolean' %}
-                    <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}yes{% else %}no{% endif %}' }}</td>
+                    <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' %}'~ 'Yes'|trans ~'{% else %}'~ 'No'|trans ~'{% endif %}' }}</td>
 {%   elseif metadata.type == 'percentage' %}
                     <td>{{ '{% if entity.'~ field|replace({'_': ''}) ~' is not empty %}{{ entity.'~ field|replace({'_': ''}) ~' * 100 }} %{% endif %}' }}</td>
 {%   else %}
@@ -32,12 +34,12 @@
             </tbody>
         </table>
 
-{% if ('delete' in actions) and ('show' not in actions) %}
-        {%- set delete_js, delete_js = false, false %}
-        {%- include 'views/others/delete_modal.html.twig' %}
-
-        <a href="#" onclick="$('{{ prefix }}-delete-modal'.show())">{{ 'Delete %s'|trans({'%s': entity_desc.singular})|capitalize }}</a>
-
+{% if ('edit' in actions %}
+        <a href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}">{{ 'Edit %s%'|trans({'%s%': entity_desc.singular}) }}
+{% endif %}
+        
+{% if ('delete' in actions) %}
+        {%- include 'views/others/delete_form.html.twig' %}
 {% endif %}
     </section>
 {{ "{% endblock %}" }}

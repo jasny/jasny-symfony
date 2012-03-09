@@ -1,0 +1,9 @@
+{%- if stringable %}
+    {%- set delete_message = "Are you sure you want to delete %s% '%entity%'?"|trans({'%s%': entity_desc.singular, '%entity%': '<strong class="delete-entity">' ~  _d_entity ~ '</strong>'}) -%}
+{%- else %}
+    {%- set delete_message = "Are you sure you want to delete this %s%?"|trans({'%s%': entity_desc.singular, '%entity%'}) -%}
+{%- endif %}
+       <form method="post" action="{{ "{{ path('"~ route_name_prefix ~"_delete', { "~ ref_arg ~" }) }}" }}" onsubmit="return window.confirm(\"{{ delete_message}}\")">
+            <button type="submit">{{ 'Delete %s%'|trans({'%s%': entity_desc.singular}) }}</button>
+            {{ '{{ form_rest(delete_form) }}' }}
+       </form>
