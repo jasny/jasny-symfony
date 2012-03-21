@@ -1,0 +1,11 @@
+# These Doctrine DQL function should be automatically added when adding the Jasny ORM bundle
+# For now please add '@JasnyORMBundle/Resources/config/doctrine.yml' to the imports in config.yml
+
+doctrine:
+    orm:
+        entity_managers:
+            default:
+                dql:
+                    string_functions:
+                        distance: Jasny\ORMBundle\Functions\Distance
+                        geom:     Jasny\ORMBundle\Functions\Geom

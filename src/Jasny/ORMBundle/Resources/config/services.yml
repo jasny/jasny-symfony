@@ -1,0 +1,19 @@
+parameters:
+    jasny_orm.slugger.class: Jasny\ORMBundle\Helpers\Slugger
+    jasny_orm.autoreference_listener.class: Jasny\ORMBundle\Services\AutoReferenceListener
+    jasny_orm.property_persister.class: Jasny\ORMBundle\Services\PropertyPersister
+services:
+    jasny_orm.slugger:
+        class: %jasny_orm.slugger.class%
+        arguments: [%jasny_orm.slugger.space%, %jasny_orm.slugger.glue%]
+    jasny_orm.autoreference_listener:
+        class: %jasny_orm.autoreference_listener.class%
+        arguments: ['@jasny_orm.slugger']
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+    jasny_orm.property_persister:
+        class: %jasny_orm.property_persister.class%
+        arguments: ['@jasny_orm.slugger']
+        tags:
+            - { name: doctrine.event_subscriber }

@@ -1,0 +1,21 @@
+services:
+    form.type.base_form:
+        class: Jasny\FrameworkBundle\Form\BaseFormType
+        tags:
+            - { name: form.type, alias: base_form }
+    form.type.date:
+        class: Jasny\FrameworkBundle\Form\Type\DateType
+        tags:
+            - { name: form.type, alias: date }
+    form.type.datetime:
+        class: Jasny\FrameworkBundle\Form\Type\DateTimeType
+        tags:
+            - { name: form.type, alias: datetime }
+    form.type.editor:
+        class: Jasny\FrameworkBundle\Form\Type\EditorType
+        tags:
+            - { name: form.type, alias: editor }
+#twig:
+#    form:
+#        resources:
+#            - "JasnyFrameworkBundle:Form:form_layout.html.twig"

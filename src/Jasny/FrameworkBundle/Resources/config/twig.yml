@@ -1,0 +1,13 @@
+services:
+    twig.extension.text:
+        class: Jasny\FrameworkBundle\Twig\TextExtension
+        tags:
+            - { name: twig.extension }
+    twig.extension.pcre:
+        class: Jasny\FrameworkBundle\Twig\PcreExtension
+        tags:
+            - { name: twig.extension }
+    twig.extension.localdate:
+        class: Jasny\FrameworkBundle\Twig\LocalDateExtension
+        tags:
+            - { name: twig.extension }

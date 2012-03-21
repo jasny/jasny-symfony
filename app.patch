@@ -5,8 +5,8 @@ diff -u Symfony-orig/app/AppKernel.php Symfony/app/AppKernel.php
              new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
              new Symfony\Bundle\AsseticBundle\AsseticBundle(),
              new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-+            new Jasny\Bundle\BootstrapBundle\JasnyBootstrapBundle(),
-+            new Jasny\Bundle\VanillaBundle\JasnyVanillaBundle(),
++            new Jasny\BootstrapBundle\JasnyBootstrapBundle(),
++            new Jasny\VanillaBundle\JasnyVanillaBundle(),
              new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
          );
  
@@ -14,7 +14,7 @@ diff -u Symfony-orig/app/AppKernel.php Symfony/app/AppKernel.php
              $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
              $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
              $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
-+            $bundles[] = new Jasny\Bundle\GeneratorBundle\JasnyGeneratorBundle();
++            $bundles[] = new Jasny\GeneratorBundle\JasnyGeneratorBundle();
          }
  
          return $bundles;
