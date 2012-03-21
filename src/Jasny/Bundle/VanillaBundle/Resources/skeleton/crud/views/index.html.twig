@@ -44,9 +44,9 @@
                     </td>
 {% endfor %}
                     <td class="row-actions">
-                        {% if 'show' in actions %}<a class="action-show" href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': entity.id }) }}" }}" title="{{ 'Show %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}">{{ "Show"|trans }}</a>{% endif %}
-                        {% if 'edit' in actions %}<a class="action-edit" href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}" title="{{ 'Edit %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}">{{ "Edit"|trans }}</a>{% endif %}
-                        {% if 'list-delete' in actions %}<a class="action-delete" href="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity.id, 'token': attribute(delete_tokens, entity.id) }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" onclick="return window.alert(\"{{ delete_message}}\")">{{ "Delete"|trans }}</a>{% endif %}
+                        {% if 'show' in actions %}<a class="action-show" href="{{ "{{ path('"~ route_name_prefix ~"_show', { 'id': entity."~ id ~" }) }}" }}" title="{{ 'Show %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}">{{ "Show"|trans }}</a>{% endif %}
+                        {% if 'edit' in actions %}<a class="action-edit" href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity."~ id ~" }) }}" }}" title="{{ 'Edit %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}">{{ "Edit"|trans }}</a>{% endif %}
+                        {% if 'list-delete' in actions %}<a class="action-delete" href="{{ "{{ path('"~ route_name_prefix ~"_delete', { 'id': entity."~ id ~", 'token': attribute(delete_tokens, entity.id) }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" onclick="return window.alert(\"{{ delete_message}}\")">{{ "Delete"|trans }}</a>{% endif %}
                     </td>
                 </tr>
             {{ '{% endfor %}' }}

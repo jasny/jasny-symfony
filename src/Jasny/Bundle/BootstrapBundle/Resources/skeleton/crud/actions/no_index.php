@@ -10,20 +10,20 @@
     public function indexAction()
     {
         $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findOneBy(array());
+        
+        $entity = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findFirst();
+{% if 'new' not in actions %}
+        if (!$entity) throw $this->createNotFoundException('Unable to find any {{ entity_desc.plural }}.');
+{% else %}
 
         if (!$entity) {
-{% if 'new' in actions %}
             return $this->redirect($this->generateUrl('{{ route_name_prefix }}.new'));
-{% else %}
-            throw $this->createNotFoundException('Unable to find any {{ entity_desc.plural }}.');
-{% endif %}
         }
+{% endif %}
         
 {% if 'show' in actions %}
-        return $this->redirect($this->generateUrl('{{ route_name_prefix }}.show', array('id' => $entity->getId())));
+        return $this->redirect($this->generateUrl('{{ route_name_prefix }}.show', array('id' => $entity->get{{ id|capitalize }}())));
 {% elseif 'edit' in actions %}
-        return $this->redirect($this->generateUrl('{{ route_name_prefix }}.edit', array('id' => $entity->getId())));
+        return $this->redirect($this->generateUrl('{{ route_name_prefix }}.edit', array('id' => $entity->get{{ id|capitalize }}())));
 {% endif %}
     }

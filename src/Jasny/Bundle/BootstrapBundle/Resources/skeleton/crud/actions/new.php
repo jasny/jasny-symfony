@@ -15,16 +15,16 @@
         
         return $this->displayNewView($entity, $form);
     }
-    
-{%- include 'actions/create.php' -%}
-    
+{##}
+{%- include 'actions/create.php' %}
+
     private function displayNewView($entity, $form)
     {
 {% if 'index' not in actions %}
         $em = $this->getDoctrine()->getEntityManager();
         $list = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findAll();
         
-{% endif %}    
+{% endif %}
 {% if 'annotation' == format %}
         return array(
 {% else %}

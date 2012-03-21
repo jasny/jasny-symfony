@@ -3,21 +3,22 @@
     {%- set _d_entity = "''" %}
     {%- set _d_form   = "false" %}
 {% else %}
-    {%- set _d_action = "path('" ~ route_name_prefix ~ ".delete', { 'id': entity.id })" %}
+    {%- set _d_action = "path('" ~ route_name_prefix ~ ".delete', { 'id': entity."~ id ~" })" %}
     {%- set _d_entity = "entity" %}
     {%- set _d_form   = "delete_form" %}
 {% endif %}
 
 {{ "{% block modals %}" }}
-{%- if stringable %}
+{% if stringable %}
     {{ "{{ base.delete_modal('" ~ prefix ~ "', " ~ _d_action ~ " , \"" ~ "Are you sure you want to delete %s% '%entity%'?"|trans({'%s%': entity_desc.singular}) ~ "\", " ~ _d_entity ~ ", " ~ _d_form ~ ") }}" }}
-{%- else %}
+{% else %}
     {{ "{{ base.delete_modal('" ~ prefix ~ "', " ~ _d_action ~ " , \"" ~ "Are you sure you want to delete this %s%?"|trans({'%s%': entity_desc.singular}) ~ "\", '', " ~ _d_form ~ ") }}" }}
-{%- endif -%}
+{% endif %}
 {{ "{% endblock %}" }}
 
-{%- if delete_js -%}
+{% if delete_js|default(false) %}
 {{ "{% block javascripts %}" }}
     {{ "{{ base.delete_modal_js('" ~ prefix ~ "') }}" }}
 {{ "{% endblock %}" }}
-{%- endif %}
+
+{% endif %}

@@ -1,10 +1,12 @@
 {{ "{% extends '" ~ bundle ~ "::base.html.twig' %}" }}
 
-{{ "{% block title %}" }}{{ entity_desc.singular|capitalize }}{% if stringable %} - {{ '{{ entity }}' }}{% endif %}{{ "{% endblock %}" }}
+{{ "{% block title %}" }}{{ stringable ? '{{ entity }}' : entity_desc.singular|capitalize }}{{ "{% endblock %}" }}
 
 {{ "{% block header %}" }}
 {% if stringable %}
     <h1>{{ '{{ entity }}' }}</h1>
+{% else %}
+    <h1>{{ entity_desc.singular|capitalize }}</h1>
 {% endif %}
 {{ "{% endblock %}" }}
 
@@ -35,7 +37,7 @@
         </table>
 
 {% if ('edit' in actions %}
-        <a href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity.id }) }}" }}">{{ 'Edit %s%'|trans({'%s%': entity_desc.singular}) }}
+        <a href="{{ "{{ path('"~ route_name_prefix ~"_edit', { 'id': entity."~ id ~" }) }}" }}">{{ 'Edit %s%'|trans({'%s%': entity_desc.singular}) }}
 {% endif %}
         
 {% if ('delete' in actions) %}

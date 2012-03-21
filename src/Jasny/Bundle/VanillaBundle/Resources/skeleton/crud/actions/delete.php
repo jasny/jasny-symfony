@@ -26,9 +26,9 @@
             $em->flush();
             
 {% if stringable %}
-        $this->get('session')->setFlash('notice', "{{ "Deleted %s% '$entity'"|trans({'%s%': entity_desc.singular})|capitalize }}");
+            $this->get('session')->setFlash('notice', "{{ "Deleted %s% '$entity'"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {% else %}
-        $this->get('session')->setFlash('notice', "{{ "Deleted the %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
+            $this->get('session')->setFlash('notice', "{{ "Deleted the %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {% endif %}
         }
 
@@ -43,7 +43,7 @@
         ;
     }
     
-{% if ('index' in actions) and ('show' not in actions) and ('edit' not in actions) %}
+{% if 'index:delete' in actions %}
     private function createDeleteTokens($entities)
     {
         $tokens = array();
@@ -56,4 +56,3 @@
         return $tokens;
     }
 {% endif %}
-    

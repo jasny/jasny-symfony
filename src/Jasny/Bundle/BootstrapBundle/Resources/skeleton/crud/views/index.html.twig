@@ -3,7 +3,7 @@
 {{ "{% block title %}"}}{{ entity_desc.plural|title }}{{ "{% endblock %}" }}
 
 {{ "{% block body %}" }}
-    <div class="content">
+    <div class="container">
         <div class="page-header">
             <h1>{{ entity_desc.plural|title }}</h1>
         </div>
@@ -15,14 +15,14 @@
 {% for field, metadata in fields %}
                         <th class="{{ metadata.type }}-type">{{ field|replace({'_': ' '})|capitalize }}</th>
 {% endfor %}
-{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
+{% if 'index:delete' in actions %}
                         <th class="row-actions"></th>
 {% endif %}
                     </tr>
                 </thead>
                 <tbody>
                 {{ '{% for entity in entities %}' }}
-                    <tr class="{{ "{{ cycle(['odd', 'even'], loop.index) }}" }}" {% if 'show' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~".show', { 'id': entity.id }) }}" }}"{% elseif 'edit' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~".edit', { 'id': entity.id }) }}" }}"{% endif %}>
+                    <tr class="{{ "{{ cycle(['odd', 'even'], loop.index) }}" }}" {% if 'show' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~".show', { 'id': entity."~ id ~" }) }}" }}"{% elseif 'edit' in actions %}data-href="{{ "{{ path('"~ route_name_prefix ~".edit', { 'id': entity."~ id ~" }) }}" }}"{% endif %}>
 {% for field, metadata in fields %}
                         <td class="{{ metadata.type }}-type">
 {%   if metadata.type == 'date' %}
@@ -38,17 +38,17 @@
 {%   endif %}
                         </td>
 {% endfor %}
-{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
+{% if 'index:delete' in actions %}
                         <td class="row-actions nohref" style="white-space: nowrap">
-                            <a class="act act-danger" href="{{ "{{ path('"~ route_name_prefix ~".delete', { 'id': entity.id }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete="{{ prefix }}" data-delete-id="{{ '{{ entity.id }}' }}" {{ '{% if delete_tokens is defined %}' }}data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}"{{ '{% endif %}' }} {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}><i class="iconic-x"></i></a>
+                            <a class="act act-danger" href="{{ "{{ path('"~ route_name_prefix ~".delete', { 'id': entity."~ id ~" }) }}" }}" title="{{ 'Delete %s%'|trans({'%s%': entity_desc.singular ~ (stringable ? " '{{ entity }}'" : '')})|capitalize }}" data-delete="{{ prefix }}" data-delete-id="{{ '{{ entity.id }}' }}" {{ '{% if delete_tokens is defined %}' }}data-delete-token="{{ '{{ attribute(delete_tokens, entity.id) }}' }}"{{ '{% endif %}' }} {% if stringable %}data-delete-desc="{{ '{{ entity }}' }}"{% endif %}><i class="iconic-x"></i></a>
                         </td>
 {% endif %}
                     </tr>
                 {{ '{% endfor %}' }}
                 </tbody>
             </table>
-
 {% if pagination %}
+                
             <div class="pagination">
                 <ul>
                     {{ '{% if page == 1 %}' }}<li class="prev disabled"><a href="#">{{ '{% else %}' }}<li class="prev"><a href="{{ "{{ path('"~ route_name_prefix ~"', { 'page': page-1 }) }}" }}">{{ '{% endif %}' }}&larr; {{ 'Previous'|trans }}</a></li>
@@ -58,17 +58,16 @@
                     {{ '{% if page == pagecount %}' }}<li class="next disabled"><a href="#">{{ '{% else %}' }}<li class="next"><a href="{{ "{{ path('"~ route_name_prefix ~"', { 'page': page+1 }) }}" }}">{{ '{% endif %}' }}{{ 'Next'|trans }} &rarr;</a></li>
                 </ul>
             </div>
-
 {% endif %}
 {% if 'new' in actions %}
+                
             <div class="table-actions">
                 <a href="{{ "{{ path('"~ route_name_prefix ~".new') }}" }}" class="btn btn-success pull-right"><i class="iconic-plus"></i> {{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</a>
             </div>
-
 {% endif %}
-    </section>
+        </section>
+    </div>
 {{ '{% endblock %}' }}
-
-{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
+{% if 'index:delete' in actions %}
     {%- include 'views/others/delete_modal.html.twig' with {'delete_js': true} %}
 {% endif %}

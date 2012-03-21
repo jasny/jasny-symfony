@@ -9,12 +9,12 @@
 
 {{ "{% block body %}" }}    
 {% if 'index' not in actions %}
-    <div class="content tabbable tabs-left">
+    <div class="container tabbable tabs-left">
       {%- include 'views/others/list_tabs.html.twig' %}
   
       <div class="tab-content">
 {% else %}
-    <div class="content">
+    <div class="container">
 {% endif %}
         <div class="page-header">
             <h1>{{ 'Add %s%'|trans({'%s%': entity_desc.singular})|capitalize }}</h1>

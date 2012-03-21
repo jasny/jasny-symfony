@@ -17,8 +17,6 @@ use Symfony\Component\HttpKernel\Util\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use Doctrine\ORM\Tools\EntityGenerator;
-use Doctrine\ORM\Tools\EntityRepositoryGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
 
 /**
@@ -61,9 +59,10 @@ class DoctrineEntityGenerator extends BaseGenerator
         $class->setTableName($this->makeTablename($entity));
         // ---
         
-        if ($withRepository) {
-            $class->customRepositoryClassName = $entityClass.'Repository';
-        }
+        // Jasny: Use entity repository from Jasny by default
+        $class->customRepositoryClassName = $withRepository ? $entityClass.'Repository' : 'Jasny\Bundle\ORMBundle\EntityRepository';
+        // ---
+            
         $class->mapField(array('fieldName' => 'id', 'type' => 'integer', 'id' => true));
         $class->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_AUTO);
         foreach ($fields as &$field) {
@@ -111,4 +110,9 @@ class DoctrineEntityGenerator extends BaseGenerator
     {
         return strtolower(preg_replace('~([a-z])([A-Z])|\\\\~', '$1_$2', $entity));
     }
+    
+    protected function getRepositoryGenerator()
+    {
+        return new EntityRepositoryGenerator();
+    }    
 }

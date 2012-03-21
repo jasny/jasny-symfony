@@ -32,6 +32,7 @@ class CrudGenerator extends Generator
     private $entityBundle;
     private $entity;
     private $metadata;
+    private $id = 'id';
     private $format;
     private $actions;
     private $customForm;
@@ -81,16 +82,21 @@ class CrudGenerator extends Generator
             throw new \RuntimeException('The CRUD generator expects the entity object has a primary key field named "id" with a getId() method.');
         }
         
+        if (!$this->checkEntityRepository($metadata)) {
+            throw new \RuntimeException('The CRUD generator expects the entity repository to be/extend Jasny\Bundles\ORMBundle\EntityRepository.');
+        }
+        
         $this->bundle       = $bundle;
         $this->entityBundle = $entityBundle;
         $this->entity       = $entity;
         $this->metadata     = $metadata;
         $this->entityDesc   = $entityDesc;
+        $this->language     = $language;
         $this->setFormat($format);
 
         $refl = $metadata->getReflectionClass();
-        $this->stringable  = $refl->hasMethod('__toString');
-        $this->language = $language;
+        $this->stringable = $refl->hasMethod('__toString');
+        if ($refl->implementsInterface('Jasny\Bundle\ORMBundle\Referenceable')) $this->initReferenceable($metadata);
         
         $this->generateControllerClass();
 
@@ -146,6 +152,43 @@ class CrudGenerator extends Generator
     }
 
     /**
+     * Initialise Referenceable entity
+     * 
+     * @param ClassMetadata $class
+     */
+    private function initReferenceable(ClassMetadataInfo $class)
+    {
+        if (isset($class->fieldMappings['reference'])) {
+            if (!$class->fieldMappings['reference']['unique']) trigger_error("Reference field for " . $this->entity . " entity should be unique.", E_USER_NOTICE);
+            $this->id = 'reference';
+            return;
+        } 
+        
+        foreach ($class->fieldMappings as $fieldname => $props) {
+            if ($props['unique']) {
+                $this->id = $fieldname;
+                return;
+            }
+        }
+
+        trigger_error($this->entity . " entity incorrectly implements Referencable. I could not find a unique field", E_USER_WARNING);
+    }
+    
+    /**
+     * Check if entity repository is or extends one from jasny ORM bundle
+     * 
+     * @param ClassMetadataInfo $metadata
+     * @return boolean
+     */
+    private function checkEntityRepository(ClassMetadataInfo $metadata)
+    {
+        if ($metadata->customRepositoryClassName == '') return false;
+        if ($metadata->customRepositoryClassName == 'Jasny\Bundle\ORMBundle\EntityRepository') return true;
+        
+        return is_subclass_of($metadata->customRepositoryClassName, 'Jasny\Bundle\ORMBundle\EntityRepository');
+    }
+    
+    /**
      * Generates the routing configuration.
      *
      */
@@ -168,6 +211,7 @@ class CrudGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'id'                => $this->id,
         ));
     }
 
@@ -206,6 +250,7 @@ class CrudGenerator extends Generator
             'entity_bundle'     => $this->entityBundle->getName(),
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,
+            'id'                => $this->id,
             'format'            => $this->format,
             'entity_desc'       => $this->entityDesc,
             'stringable'        => $this->stringable,
@@ -235,6 +280,7 @@ class CrudGenerator extends Generator
             'entity_bundle'     => $this->entityBundle->getName(),
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,
+            'id'                => $this->id,
             'actions'           => $this->actions,
             'dir'               => $this->skeletonDir,
         ));
@@ -253,6 +299,7 @@ class CrudGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'id'                => $this->id,
             'fields'            => $this->getFieldsFromMetadata($this->metadata),
             'actions'           => $this->actions,
             'entity_desc'       => $this->entityDesc,
@@ -273,6 +320,7 @@ class CrudGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'id'                => $this->id,
             'fields'            => $this->getFieldsFromMetadata($this->metadata, array('text', 'object')),
             'prefix'            => preg_replace('/^.*_/', '', $this->routeNamePrefix),
             'actions'           => $this->actions,
@@ -296,6 +344,7 @@ class CrudGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'id'                => $this->id,
             'fields'            => $this->getFieldsFromMetadata($this->metadata),
             'prefix'            => preg_replace('/^.*_/', '', $this->routeNamePrefix),
             'actions'           => $this->actions,
@@ -318,6 +367,7 @@ class CrudGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'id'                => $this->id,
             'prefix'            => preg_replace('/^.*_/', '', $this->routeNamePrefix),
             'actions'           => $this->actions,
             'custom_form'       => $this->customForm,
@@ -339,6 +389,7 @@ class CrudGenerator extends Generator
             'route_name_prefix' => $this->routeNamePrefix,
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
+            'id'                => $this->id,
             'prefix'            => preg_replace('/^.*_/', '', $this->routeNamePrefix),
             'actions'           => $this->actions,
             'custom_form'       => $this->customForm,

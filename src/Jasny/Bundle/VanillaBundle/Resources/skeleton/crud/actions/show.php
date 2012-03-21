@@ -12,19 +12,16 @@
         $em = $this->getDoctrine()->getEntityManager();
 
         $entity = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find {{ entity_desc.singular }}.');
-        }
+        if (!$entity) throw $this->createNotFoundException('Unable to find {{ entity_desc.singular }}.');
 
         $form = $this->createForm(new {{ entity_class }}Type(), $entity, array('read_only'=>true));
         
-{% if 'index' not in actions %}
-        $list = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findAll();
-
-{% endif %}    
 {% if ('delete' in actions) %}
         $deleteForm = $this->createDeleteForm($id);
+
+{% endif %}
+{% if 'index' not in actions %}
+        $list = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findAll();
 
 {% endif %}
 {% if 'annotation' == format %}

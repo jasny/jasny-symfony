@@ -12,11 +12,12 @@
         
         <link rel="shortcut icon" href="{{ "{{ asset('favicon.ico') }}" }}" />
         <link rel="stylesheet" href="{{ "{{ asset('bundles/jasnybootstrap/bootstrap/css/bootstrap.min.css') }}" }}">
+        <link rel="stylesheet" href="{{ "{{ asset('bundles/jasnybootstrap/bootstrap/css/bootstrap.responsive.min.css') }}" }}">
 
         {{ "{% block stylesheets %}" }}
         {{ "{% endblock %}" }}
     </head>
-    <body style="padding-top: 50px">
+    <body style="padding-top: 40px">
         <div class="navbar navbar-fixed-top">
           <div class="navbar-inner">
             <div class="container">
@@ -46,14 +47,14 @@
             {{ "{% endif %}" }}
         {{ "{% endfor %}" }}
             
-        <div class="container">
-            {{ "{% block body %}" }}
-            {{ "{% endblock %}" }}
-
-            <footer>
-                <p>&copy; {{ "now"|date("Y") }} {{ sitename|default('My Website'|trans) }}</p>
-            </footer>
-        </div> 
+        {{ "{% block body %}" }}
+        {{ "{% endblock %}" }}
+            
+        <footer>
+            <div class="container">
+                &copy; {{ "now"|date("Y") }} {{ sitename|default('My Website'|trans) }}
+            </div>
+        </footer>
 
         {{ "{% block modals %}" }}
         {{ "{% endblock %}" }}

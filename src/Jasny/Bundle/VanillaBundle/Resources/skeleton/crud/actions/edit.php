@@ -19,8 +19,8 @@
 
         return $this->displayEditView($entity, $form);
     }
-    
-{%- include 'actions/update.php' -%}
+{##}
+{%- include 'actions/update.php' %}
 
     private function displayEditView($entity, $form)
     {
@@ -28,10 +28,10 @@
         $em = $this->getDoctrine()->getEntityManager();
         $list = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findAll();
         
-{% endif %}    
+{% endif %}
 {% if ('delete' in actions) and ('show' not in actions) %}
         $deleteForm = $this->createDeleteForm($entity->getId());
-
+        
 {% endif %}
 {% if 'annotation' == format %}
         return array(

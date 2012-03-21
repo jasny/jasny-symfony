@@ -49,6 +49,7 @@ abstract class GenerateCrudCommand extends GenerateDoctrineCommand
                 new InputOption('bundle', '', InputOption::VALUE_REQUIRED, 'The target bundle to generate the controller and views in (shortcut notation)'),
                 new InputOption('route-prefix', '', InputOption::VALUE_REQUIRED, 'The route prefix'),
                 new InputOption('actions', '', InputOption::VALUE_REQUIRED, 'Which actions to create (options: list, show, new, edit and delete) ', join(',', (array)$this->getDefaultActions())),
+                new InputOption('list-delete', '', InputOption::VALUE_NONE, 'Show delete buttons in list view'),
                 new InputOption('format', '', InputOption::VALUE_REQUIRED, 'Use the format for configuration files (php, xml, yml, or annotation)'),
                 new InputOption('lang', '', InputOption::VALUE_REQUIRED, 'Translate the template to this language'),
                 new InputOption('custom-form', '', InputOption::VALUE_NONE, 'Create a view for the form to allow customization'),
@@ -113,6 +114,10 @@ EOT
         if (empty($actions)) {
             $output->writeln('<error>No actions selected</error>');
             return 1;
+        }
+        
+        if (in_array('delete', $actions) && in_array('index', $actions) && ($input->getOption('list-delete') || !array_intersect($actions, array('show', 'edit')))) {
+            $actions[] = 'index:delete';
         }
         
         // base view

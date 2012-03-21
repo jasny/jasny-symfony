@@ -12,7 +12,7 @@
         $em = $this->getDoctrine()->getEntityManager();
 
         $entities = $em->getRepository('{{ entity_bundle }}:{{ entity }}')->findAll();
-{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
+{% if 'index:delete' in actions %}
         $deleteTokens = $this->createDeleteTokens($entities);
 {% endif %}
         
@@ -22,7 +22,7 @@
         return $this->render('{{ bundle }}:{{ entity|replace({'\\': '/'}) }}:index.html.twig', array(
 {% endif %}
             'entities' => $entities,
-{% if ('delete' in actions) and ('show' not in actions) and ('edit' not in actions) %}
+{% if 'index:delete' in actions %}
             'delete_tokens' => $deleteTokens,
 {% endif %}
         ){% if 'annotation' != format %}){% endif %};
