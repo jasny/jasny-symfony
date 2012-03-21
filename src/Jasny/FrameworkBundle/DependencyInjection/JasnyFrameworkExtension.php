@@ -19,31 +19,12 @@ class JasnyFrameworkExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        
         $loader->load('form.yml');
         $loader->load('twig.yml');
-        
-        $this->setORMParameters($container);
-    }
-    
-    /**
-     * Add Doctrine ORM types and functions.
-     * 
-     * @param ContainerBuilder $container 
-     */
-    protected function setORMParameters(ContainerBuilder $container)
-    {
-        // Types
-        $orm_types = array(
-            'reference' => 'Jasny\FrameworkBundle\ORM\Types\ReferenceType',
-            'point' => 'Jasny\FrameworkBundle\ORM\Types\PointType',
-        ) + $container->getParameter('doctrine.dbal.connection_factory.types');
-        
-        $container->setParameter('doctrine.dbal.connection_factory.types', $orm_types);
-        
-        // Functions
-        $ormConfigDef = $container->setDefinition('jasny.orm.configuration', new DefinitionDecorator('doctrine.orm.configuration'));
-        
-        $ormConfigDef->addMethodCall('addCustomNumericFunction', array('geom', 'Jasny\FrameworkBundle\ORM\Functions\Geom'));
+
+        // Change default Twig form view
+        if ($container->getParameter('twig.form.resources') == array('form_div_layout.html.twig')) {
+            $container->setParameter('twig.form.resources', array('JasnyFrameworkBundle:Form:form_layout.html.twig'));
+        }
     }
 }

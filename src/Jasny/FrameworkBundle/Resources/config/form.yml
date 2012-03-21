@@ -15,7 +15,3 @@ services:
         class: Jasny\FrameworkBundle\Form\Type\EditorType
         tags:
             - { name: form.type, alias: editor }
-#twig:
-#    form:
-#        resources:
-#            - "JasnyFrameworkBundle:Form:form_layout.html.twig"
