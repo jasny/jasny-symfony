@@ -1,13 +1,13 @@
 parameters:
     jasny_orm.slugger.class: Jasny\ORMBundle\Helpers\Slugger
-    jasny_orm.autoreference_listener.class: Jasny\ORMBundle\Services\AutoReferenceListener
+    jasny_orm.auto_referencer.class: Jasny\ORMBundle\Services\AutoReferencer
     jasny_orm.property_persister.class: Jasny\ORMBundle\Services\PropertyPersister
 services:
     jasny_orm.slugger:
         class: %jasny_orm.slugger.class%
         arguments: [%jasny_orm.slugger.space%, %jasny_orm.slugger.glue%]
-    jasny_orm.autoreference_listener:
-        class: %jasny_orm.autoreference_listener.class%
+    jasny_orm.auto_referencer:
+        class: %jasny_orm.auto_referencer.class%
         arguments: ['@jasny_orm.slugger']
         tags:
             - { name: doctrine.event_listener, event: prePersist }

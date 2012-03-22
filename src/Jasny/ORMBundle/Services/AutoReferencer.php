@@ -22,7 +22,7 @@ use Doctrine\ORM\EntityRepository;
 /**
  * Service for AutoReference entities.
  */
-class AutoReferenceListener
+class AutoReferencer
 {
     /**
      * @var AutoReferenceGenerator
@@ -48,7 +48,7 @@ class AutoReferenceListener
 			$entity = $ea->getEntity();
 			$repository = $ea->getEntityManager()->getRepository(get_class($entity));
 
-            $value = $entity->getReference() ?: $entity->getReferenceSource();
+            $value = $entity->getReference() ?: (method_exists($entity, 'getReferenceSource') ? $entity->getReferenceSource() : (string)$entity);
 			$reference = $this->generateReference($entity, $repository, $value);
             
         	$entity->setReference($reference);
@@ -67,7 +67,7 @@ class AutoReferenceListener
 			$repository = $ea->getEntityManager()->getRepository(get_class($entity));
             
             if ($ea->hasChangedField('reference')) {
-                $value = $ea->getNewValue('reference') ?: $entity->getReferenceSource();
+                $value = $ea->getNewValue('reference') ?: (method_exists($entity, 'getReferenceSource') ? $entity->getReferenceSource() : (string)$entity);
                 $reference = $this->generateReference($entity, $repository, $value);
                 
                 $ea->setNewValue('reference', $reference);
