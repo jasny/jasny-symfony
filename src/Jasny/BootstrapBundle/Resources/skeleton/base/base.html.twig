@@ -38,9 +38,9 @@
 
         {{ "{% for type in ['error', 'notice', 'success'] %}" }}
             {{ "{% if app.session.hasFlash(type) %}" }}
-                <div class="flash-message">
-                    <div class="alert-message block-message {{ '{{ type }}' }} fade in" data-alert="alert">
-                        <a class="close" href="#">&times;</a>
+                <div class="page-alert">
+                    <div class="alert alert-{{ '{{ type }}' }} fade in" data-alert="alert">
+                        <a class="close" href="#" data-dismiss="alert">&times;</a>
                         {{ "{{ app.session.flash(type) }}" }}
                     </div>
                 </div>
@@ -65,7 +65,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
         <script src="{{ "{{ asset('bundles/jasnybootstrap/bootstrap/js/bootstrap.min.js') }}" }}" type="text/javascript"></script>
         <script type="text/javascript">
-            setTimeout(function(){ $(".flash-message").fadeOut() }, 5000);
+            setTimeout(function(){ $(".page-alert").fadeOut() }, 5000);
         </script>
 
         {{ "{% block javascripts %}" }}

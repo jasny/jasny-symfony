@@ -25,10 +25,13 @@
             return $this->displayEditView($entity, $form);
         }
 
+        $em->persist($entity);
+        $em->flush();
+        
 {%   if stringable %}
-        $this->get('session')->setFlash('success', "{{ "Saved %s% '$entity'"|trans({'%s%': entity_desc.singular}) }}");
+        $this->get('session')->setFlash('success', "{{ "Saved %s% '$entity'"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {%   else %}
-        $this->get('session')->setFlash('success', "{{ "Saved the %s%"|trans({'%s%': entity_desc.singular}) }}");
+        $this->get('session')->setFlash('success', "{{ "Saved the %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {%   endif %}
 {% else %}
         if ($form->isValid()) {
@@ -36,9 +39,9 @@
             $em->flush();
 
 {%   if stringable %}
-            $this->get('session')->setFlash('success', "{{ "Saved %s% '$entity'"|trans({'%s%': entity_desc.singular}) }}");
+            $this->get('session')->setFlash('success', "{{ "Saved %s% '$entity'"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {%   else %}
-            $this->get('session')->setFlash('success', "{{ "Saved the %s%"|trans({'%s%': entity_desc.singular}) }}");
+            $this->get('session')->setFlash('success', "{{ "Saved the %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
 {%   endif %}
         } else {
             $this->get('session')->setFlash('error', "{{ "Failed to save the %s%"|trans({'%s%': entity_desc.singular})|capitalize }}");
