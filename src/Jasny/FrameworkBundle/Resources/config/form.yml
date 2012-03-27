@@ -15,3 +15,7 @@ services:
         class: Jasny\FrameworkBundle\Form\Type\EditorType
         tags:
             - { name: form.type, alias: editor }
+    form.type.phonenumber:
+        class: Jasny\FrameworkBundle\Form\Type\PhonenumberType
+        tags:
+            - { name: form.type, alias: phonenumber }

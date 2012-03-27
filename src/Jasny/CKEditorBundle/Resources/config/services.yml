@@ -8,5 +8,6 @@ services:
         arguments: ['@service_container', %jasny_ckeditor.upload_dir%]
     form.type.ckeditor:
         class: %jasny_ckeditor.form.type.class%
+        arguments: ['@ckeditor.kcfinder']
         tags:
             - { name: form.type, alias: ckeditor }

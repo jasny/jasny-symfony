@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormView;
-
+use Jasny\CKEditorBundle\Services\KCFinder;
 
 class CKEditorType extends AbstractType
 {
@@ -25,10 +25,26 @@ class CKEditorType extends AbstractType
     protected $asset_path = 'bundles/jasnyckeditor/ckeditor';
     
     /**
+     * KCFinder service
+     * @var KCFinder 
+     */
+    protected $kcfinder;
+    
+    /**
      * Load on first instance of CKEditor
      */
     static protected $autoload = true;
     
+    
+    /**
+     * Constructor
+     * 
+     * @param KCFinder $kcfinder 
+     */
+    public function __construct(KCFinder $kcfinder = null)
+    {
+        $this->kcfinder = $kcfinder;
+    }
     
     /**
      * {@inheritdoc}
@@ -39,6 +55,7 @@ class CKEditorType extends AbstractType
         $builder->setAttribute('javascript', $options['javascript']);
         $builder->setAttribute('load_ckeditor', $options['load_ckeditor']);
         $builder->setAttribute('kcfinder', $options['kcfinder']);
+        $builder->setAttribute('linkify', $options['linkify']);
         
         // Set height of the textbox
         $height = isset($options['config']['height']) ? $options['config']['height'] : 200;
@@ -81,6 +98,7 @@ SCRIPT;
         
         $view->set('config', $config);
         $view->set('javascript', $js);
+        $view->set('linkify', $form->getAttribute('linkify'));
     }
     
     /**
@@ -96,6 +114,7 @@ SCRIPT;
             'javascript' => true,
             'load_ckeditor' => $load,
             'kcfinder' => true,
+            'linkify' => true,
         );
     }
     
@@ -122,10 +141,9 @@ SCRIPT;
      */
     protected function getKCFinderConfig()
     {
-        global $kernel;
-        $kcfinder = $kernel->getContainer()->get('ckeditor.kcfinder');
+        if (!isset($this->kcfinder)) return array();
         
-        $kcfinder->enable();
-        return $kcfinder->getCKEditorConfig();
+        $this->kcfinder->enable();
+        return $this->kcfinder->getCKEditorConfig();
     }
 }

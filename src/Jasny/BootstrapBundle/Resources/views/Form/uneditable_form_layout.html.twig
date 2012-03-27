@@ -34,7 +34,7 @@
 {% block ckeditor_widget %}
 {% spaceless %}
     {% set attr = attr|merge({'class': attr.class|default('') ~ ' uneditable-input editor editor-ckeditor'}) %}
-    <div {{ block('widget_attributes') }}>{{ value|raw }}</div>
+    <div {{ block('widget_attributes') }}>{{ linkify ? value|raw|linkify : value|raw }}</div>
 {% endspaceless %}
 {% endblock ckeditor_widget %}
 
@@ -204,9 +204,16 @@
 {% block email_widget %}
 {% spaceless %}
     {% set type = type|default('email') %}
-    {{ block('field_widget') }}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' uneditable-input'}) %}
+    <label class="input-prepend"><span class="add-on"><i class="iconic-mail"></i></span> <span {{ block('widget_attributes') }}>{{ value|linkify('mail') }}</span></label>
 {% endspaceless %}
 {% endblock email_widget %}
+
+{% block phonenumber_widget %}
+{% spaceless %}
+    <label class="input-prepend"><span class="add-on"><i class="iconic-iphone"></i></span> {{ block('field_widget') }}</label>
+{% endspaceless %}
+{% endblock phonenumber_widget %}
 
 {# Labels #}
 
