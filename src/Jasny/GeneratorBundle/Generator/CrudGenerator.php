@@ -185,7 +185,7 @@ class CrudGenerator extends Generator
         if ($metadata->customRepositoryClassName == '') return false;
         if ($metadata->customRepositoryClassName == 'Jasny\ORMBundle\EntityRepository') return true;
         
-        return is_subclass_of($metadata->customRepositoryClassName, 'Jasny\ORMBundle\EntityRepository');
+        return class_exists($metadata->customRepositoryClassName, true) && is_subclass_of($metadata->customRepositoryClassName, 'Jasny\ORMBundle\EntityRepository');
     }
     
     /**

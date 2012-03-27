@@ -27,7 +27,7 @@
 {% block editor_widget %}
 {% spaceless %}
     {% set attr = attr|merge({'class': attr.class|default('') ~ ' uneditable-input editor'}) %}
-    <div {{ block('widget_attributes') }}>{{ value }}</div>
+    <div {{ block('widget_attributes') }}>{{ linkify ? value|paragraph|linkify : value|paragraph }}</div>
 {% endspaceless %}
 {% endblock editor_widget %}
 

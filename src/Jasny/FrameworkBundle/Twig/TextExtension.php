@@ -25,6 +25,7 @@ class TextExtension extends \Twig_Extension
     {
         return array(
             'paragraph' => new \Twig_Filter_Method($this, 'paragraph', array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            'line' => new \Twig_Filter_Method($this, 'line'),
             'more' => new \Twig_Filter_Method($this, 'more', array('pre_escape' => 'html', 'is_safe' => array('html'))),
             'truncate' => new \Twig_Filter_Method($this, 'truncate', array('pre_escape' => 'html', 'is_safe' => array('html'))),
             'linkify' => new \Twig_Filter_Method($this, 'linkify', array('pre_escape' => 'html', 'is_safe' => array('html'))),
@@ -43,6 +44,19 @@ class TextExtension extends \Twig_Extension
         return '<p>' . preg_replace(array('~\n(\s*)\n\s*~', '~(?<!</p>)\n\s*~'), array("</p>\n\$1<p>", "<br>\n"), trim($value)) . '</p>';
     }
 
+    /**
+     * Get a single line
+     * 
+     * @param string $value 
+     * @param int    $line   Line number (starts at 1)
+     * @return string
+     */
+    public function line($value, $line=1)
+    {
+        $lines = explode("\n", $value);
+        return isset($lines[$line-1]) ? $lines[$line-1] : null;
+    }
+    
     /**
      * Cut of text on a pagebreak.
      * 
