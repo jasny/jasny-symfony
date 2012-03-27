@@ -48,9 +48,7 @@ class AutoReferencer
 			$entity = $ea->getEntity();
 			$repository = $ea->getEntityManager()->getRepository(get_class($entity));
 
-            $value = $entity->getReference() ?: (method_exists($entity, 'getReferenceSource') ? $entity->getReferenceSource() : (string)$entity);
-			$reference = $this->generateReference($entity, $repository, $value);
-            
+			$reference = $this->generateReference($entity, $repository, $entity->getReference());
         	$entity->setReference($reference);
 		}
 	}
@@ -67,9 +65,7 @@ class AutoReferencer
 			$repository = $ea->getEntityManager()->getRepository(get_class($entity));
             
             if ($ea->hasChangedField('reference')) {
-                $value = $ea->getNewValue('reference') ?: (method_exists($entity, 'getReferenceSource') ? $entity->getReferenceSource() : (string)$entity);
-                $reference = $this->generateReference($entity, $repository, $value);
-                
+                $reference = $this->generateReference($entity, $repository, $ea->getNewValue('reference'));
                 $ea->setNewValue('reference', $reference);
                 $entity->setReference($reference);
             }
@@ -84,13 +80,20 @@ class AutoReferencer
      * @param EntityRepository $repository
      * @param string $value
      */
-	public function generateReference(AutoReferencing $entity, EntityRepository $repository, $value)
+	public function generateReference(AutoReferencing $entity, EntityRepository $repository, $value=null)
 	{
 		// Find a reference
         $eliminated = array(); // Our prior eliminated references
         $found = false;
         
+        $call = empty($value) && method_exists($entity, 'getReferenceSource');
+        if (empty($value) && !$call) $value = (string)$entity;
+        $i = 0;
+        
 		do {
+            // If entity is passed get reference source
+            if ($call) $value = $entity->getReferenceSource($i++);
+            
             // Obtain our reference
             $reference = $this->generator->generate($value, $eliminated);
 
