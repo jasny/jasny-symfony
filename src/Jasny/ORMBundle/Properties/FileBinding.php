@@ -37,6 +37,7 @@ class FileBinding implements Persistable
      */
     protected $replacement;
     
+    public $prefixSupported = false;
 
     /**
      * Create an File object for an entity.
@@ -83,7 +84,7 @@ class FileBinding implements Persistable
             $name .= '.' . $this->replacement->guessExtension();
         } else {
             $files = glob($this->getPath() . '/' . $name . '.{' . join(',', $this->types) . '}', GLOB_BRACE);
-            $name = !empty($files) ? basename($files[0]) : null;
+            $name = !empty($files) ? substr($files[0], strlen($this->getPath()) + 1) : null;
         }
         
         return $name;
@@ -153,9 +154,9 @@ class FileBinding implements Persistable
     public function exists()
     {
         $file = $this->getFile();
-        if (!$file) return false;
+        if (empty($file)) return false;
         
-        return file_exists($file);
+        return file_exists($file->getPathname());
     }
     
     /**
@@ -169,7 +170,7 @@ class FileBinding implements Persistable
         $name = $this->getName();
         if (!isset($name)) return null;
         
-        return $this->getDirname() . "/" . (isset($prefix) ? preg_replace('~(^.*\)~', "\\1{$prefix}.", $name) : $name);
+        return $this->getDirname() . "/" . (isset($prefix) && $this->prefixSupported ? preg_replace('~(^.*/)~', "\\1{$prefix}.", $name) : $name);
     }
 
     /**
@@ -222,7 +223,7 @@ class FileBinding implements Persistable
      * @param string $file  File object or filename
      * @return File
      */
-    public function setReplacement($file)
+    public function setReplacement($filename)
     {
         if (!$filename) {
             // Delete

@@ -9,3 +9,10 @@ doctrine:
                     string_functions:
                         distance: Jasny\ORMBundle\Functions\Distance
                         geom:     Jasny\ORMBundle\Functions\Geom
+    dbal:
+        types:
+            point: Jasny\ORMBundle\Types\PointType
+        connections:
+            default:
+                mapping_types:
+                    point: point

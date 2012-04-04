@@ -20,9 +20,6 @@ To upgrade, run
 make -C vendor/jasny upgrade
 ```
 
-Also have a look at https://github.com/l3pp4rd/DoctrineExtensions
-
-
 ### Requirements ###
 
 The jasny bundles require at least Symfony **2.0.8**.

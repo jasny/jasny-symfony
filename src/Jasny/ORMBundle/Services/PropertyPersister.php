@@ -68,6 +68,8 @@ class PropertyPersister implements EventSubscriber
      */
 	protected function persistProperties($entity)
 	{
+        var_dump('HERE');
+        
         // We're walking through all public and private properties, not using getters
         foreach ((array)$entity as $value) {
             if ($value instanceof Persistable) {

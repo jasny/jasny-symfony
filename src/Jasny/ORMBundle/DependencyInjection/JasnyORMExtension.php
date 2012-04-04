@@ -26,29 +26,5 @@ class JasnyORMExtension extends Extension
         
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        
-        $this->setORMParameters($container);
-    }
-    
-    /**
-     * Add Doctrine ORM types and functions.
-     * 
-     * @param ContainerBuilder $container 
-     */
-    protected function setORMParameters(ContainerBuilder $container)
-    {
-        // Types
-        $orm_types = array(
-            'point' => 'Jasny\ORMBundle\Types\PointType',
-        ) + $container->getParameter('doctrine.dbal.connection_factory.types');
-        
-        $container->setParameter('doctrine.dbal.connection_factory.types', $orm_types);
-        
-        // Functions
-        
-        /* TODO: I want these functions to be added automatically, but how?
-        $ormConfigDef->addMethodCall('addCustomNumericFunction', array('distance', 'Jasny\ORMBundle\Functions\Distance'));
-        $ormConfigDef->addMethodCall('addCustomNumericFunction', array('geom', 'Jasny\ORMBundle\Functions\Geom'));
-        */
     }
 }
