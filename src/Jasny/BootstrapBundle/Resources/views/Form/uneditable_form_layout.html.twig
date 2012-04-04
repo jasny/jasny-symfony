@@ -26,14 +26,14 @@
 
 {% block editor_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({'class': attr.class|default('') ~ ' uneditable-input editor'}) %}
-    <div {{ block('widget_attributes') }}>{{ linkify ? value|paragraph|linkify : value|paragraph }}</div>
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' uneditable-textarea ' ~ class }) %}
+    <div {{ block('widget_attributes') }}>{{ linkify ? value|paragraph|linkify(linkify.protocols, linkify.attributes, linkify.mode) : value|paragraph }}</div>
 {% endspaceless %}
 {% endblock editor_widget %}
 
 {% block ckeditor_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({'class': attr.class|default('') ~ ' uneditable-input editor editor-ckeditor'}) %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' uneditable-textarea ' ~ (class == 'ckeditor' ? 'editor editor-ckeditor' : class)}) %}
     <div {{ block('widget_attributes') }}>{{ linkify ? value|raw|linkify : value|raw }}</div>
 {% endspaceless %}
 {% endblock ckeditor_widget %}
@@ -214,6 +214,16 @@
     <label class="input-prepend"><span class="add-on"><i class="iconic-iphone"></i></span> {{ block('field_widget') }}</label>
 {% endspaceless %}
 {% endblock phonenumber_widget %}
+
+{% block image_widget %}
+{% spaceless %}
+    {% if preview %}
+        <img src="{{ preview }}"{% if preview_size %} style="max-width: {{ preview_size.width }}px; max-height: {{ preview_size.height }}px;"{% endif %}/>
+    {% elseif default_preview %}
+        <img src="{{ default_preview }}" style="border: 1px solid #DDDDDD;" />
+    {% endif %}
+{% endspaceless %}
+{% endblock image_widget %}
 
 {# Labels #}
 

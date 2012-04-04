@@ -26,14 +26,12 @@
 
 {% block editor_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({'class': attr.class|default('') ~ ' editor'}) %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
 {% endspaceless %}
 {% endblock editor_widget %}
 
 {% block ckeditor_widget %}
 {% spaceless %}
-    {% set attr = attr|merge({'class': attr.class|default('') ~ ' editor editor-ckeditor'}) %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
     {{ javascript|raw }}
 {% endspaceless %}
@@ -99,7 +97,7 @@
     {% if widget == 'single_text' %}
         {{ block('field_widget') }}
     {% else %}
-        {% set attr = attr|merge({'class' : 'input-selects ' ~ (attr.class is defined ? attr.class : '') }) %}
+        {% set class = 'input-selects ' ~ class %}
         <div {{ block('widget_container_attributes') }}>
             {{ date_pattern|replace({
                 '{{ year }}':  form_widget(form.date.year),
@@ -118,7 +116,7 @@
     {% if widget == 'single_text' %}
         {{ block('field_widget') }}
     {% else %}
-        {% set attr = attr|merge({'class' : 'input-selects ' ~ (attr.class is defined ? attr.class : '') }) %}
+        {% set class = 'input-selects ' ~ class %}
         <div {{ block('widget_container_attributes') }}>
             {{ date_pattern|replace({
                 '{{ year }}':  form_widget(form.year),
@@ -135,7 +133,7 @@
     {% if widget == 'single_text' %}
         {{ block('field_widget') }}
     {% else %}
-        {% set attr = attr|merge({'class' : 'input-selects ' ~ (attr.class is defined ? attr.class : '') }) %}
+        {% set class = 'input-selects ' ~ class %}
         <div {{ block('widget_container_attributes') }}>
             {{ form_widget(form.hour, { 'attr': { 'size': '1' } }) }}:{{ form_widget(form.minute, { 'attr': { 'size': '1' } }) }}{% if with_seconds %}:{{ form_widget(form.second, { 'attr': { 'size': '1' } }) }}{% endif %}
         </div>
@@ -160,7 +158,7 @@
 
 {% block money_widget %}
 {% spaceless %}
-    <label class="input-prepend"><span class="add-on">{{ money_pattern|replace({ '{{ widget }}': '</span> ' ~ block('field_widget') })|raw }}</label>
+    <label class="input-prepend"><span class="add-on">{{ money_pattern|replace({ '{{ widget }}': '</span> <span class="control-input">' ~ block('field_widget') })|raw }}</span></label>
 {% endspaceless %}
 {% endblock money_widget %}
 
@@ -181,7 +179,7 @@
 {% block percent_widget %}
 {% spaceless %}
     {% set type = type|default('text') %}
-    <label class="input-append">{{ block('field_widget') }} <span class="add-on">%</span></label>
+    <label class="input-append"><span class="control-input">{{ block('field_widget') }}</span> <span class="add-on">%</span></label>
 {% endspaceless %}
 {% endblock percent_widget %}
 
@@ -207,9 +205,33 @@
 {% block email_widget %}
 {% spaceless %}
     {% set type = type|default('email') %}
-    {{ block('field_widget') }}
+    <label class="input-prepend"><span class="add-on"><i class="iconic-mail"></i></span> <span class="control-input">{{ block('field_widget') }}</span></label>
 {% endspaceless %}
 {% endblock email_widget %}
+
+{% block phonenumber_widget %}
+{% spaceless %}
+    <label class="input-prepend"><span class="add-on"><i class="iconic-iphone"></i></span> <span class="control-input">{{ block('field_widget') }}</span></label>
+{% endspaceless %}
+{% endblock phonenumber_widget %}
+
+{% block file_widget %}
+{% spaceless %}
+    <span class="btn btn-file">{% trans %}Select file{% endtrans %}{{ block('field_widget') }}</span>
+{% endspaceless %}
+{% endblock file_widget %}
+
+{% block image_widget %}
+    <div class="fileupload fileupload-{{ exists ? 'exists' : 'new' }}" data-fileupload="image">
+        {#<input type="hidden" name="{{ full_name }}" value="" />#}
+        {% if default_preview %}<div class="fileupload-new"><img src="{{ default_preview }}" alt="{% trans %}No image selected{% endtrans %}" /></div>{% endif %}
+        <div class="fileupload-preview fileupload-exists"{% if preview_size %} data-style="max-width: {{ preview_size.width }}px; max-height: {{ preview_size.height }}px;"{% endif %}>
+            {% if preview %}<img src="{{ preview }}"{% if preview_size %} style="max-width: {{ preview_size.width }}px; max-height: {{ preview_size.height }}px;"{% endif %} />{% endif %}
+        </div>
+        <span class="btn btn-file"><i class="iconic-upload"></i> <span class="fileupload-new">{% trans %}Select image{% endtrans %}</span><span class="fileupload-exists">{% trans %}Change{% endtrans %}</span>{{ block('field_widget') }}</span>
+        {% if not required %}<a href="#" class="btn fileupload-exists" data-dismiss="fileupload"><i class="iconic-x"></i> {% trans %}Remove{% endtrans %}</a>{% endif %}
+    </div>
+{% endblock image_widget %}
 
 {# Labels #}
 
@@ -301,9 +323,9 @@
 
 {% block widget_attributes %}
 {% spaceless %}
-    id="{{ id }}" name="{{ full_name }}"{% if read_only %} disabled="disabled"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if placeholder is defined %} placeholder="{{ placeholder }}"{% endif %}{% if inputmask is defined and inputmask %} data-inputmask="{{ inputmask }}"{% endif %}
-    {#{% if required %} required="required"{% endif %}{% if pattern %} pattern="{{ pattern }}"{% endif %}#} {# HTML5 features #}
-    {% for attrname,attrvalue in attr %}{{attrname}}="{{attrvalue}}" {% endfor %}
+    id="{{ id }}" name="{{ full_name }}"{% if class or attr.class is defined %} class="{{ class }} {{ attr.class|default('') }}"{% endif %}{% if read_only %} disabled="disabled"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if required %} required="required"{% endif %}
+    {% if pattern %} pattern="{{ pattern }}"{% endif %}{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}{% if inputmask %} data-inputmask="{{ inputmask }}"{% endif %}
+    {% for attrname,attrvalue in attr if attrname != 'class' %}{{attrname}}="{{attrvalue}}" {% endfor %}
 {% endspaceless %}
 {% endblock widget_attributes %}
 

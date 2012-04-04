@@ -3,6 +3,10 @@ services:
         class: Jasny\FrameworkBundle\Form\BaseFormType
         tags:
             - { name: form.type, alias: base_form }
+    form.type.field:
+        class: Jasny\FrameworkBundle\Form\Type\FieldType
+        tags:
+            - { name: form.type, alias: field }
     form.type.date:
         class: Jasny\FrameworkBundle\Form\Type\DateType
         tags:
@@ -19,3 +23,16 @@ services:
         class: Jasny\FrameworkBundle\Form\Type\PhonenumberType
         tags:
             - { name: form.type, alias: phonenumber }
+    form.type.country:
+        class: Jasny\FrameworkBundle\Form\Type\CountryType
+        tags:
+            - { name: form.type, alias: country }
+    form.type.file:
+        class: Jasny\FrameworkBundle\Form\Type\FileType
+        tags:
+            - { name: form.type, alias: file }
+    form.type.image:
+        class: Jasny\FrameworkBundle\Form\Type\ImageType
+        arguments: ['@service_container']
+        tags:
+            - { name: form.type, alias: image }

@@ -32,7 +32,10 @@ class EditorType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form)
     {
-        $view->set('linkify', $form->getAttribute('linkify'));
+        $linkify = $form->getAttribute('linkify');
+        if ($linkify && !is_array($linkify)) $linkify = array();
+        $linkify += array('protocols' => array('http', 'mail'), 'attributes' => array(), 'mode' => 'normal');
+        $view->set('linkify', $linkify);
     }
     
     /**
@@ -41,6 +44,7 @@ class EditorType extends AbstractType
     public function getDefaultOptions(array $options)
     {
         return array(
+            'class' => 'editor',
             'linkify' => true,
         );
     }

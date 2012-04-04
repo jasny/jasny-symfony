@@ -55,7 +55,6 @@ class CKEditorType extends AbstractType
         $builder->setAttribute('javascript', $options['javascript']);
         $builder->setAttribute('load_ckeditor', $options['load_ckeditor']);
         $builder->setAttribute('kcfinder', $options['kcfinder']);
-        $builder->setAttribute('linkify', $options['linkify']);
         
         // Set height of the textbox
         $height = isset($options['config']['height']) ? $options['config']['height'] : 200;
@@ -98,7 +97,6 @@ SCRIPT;
         
         $view->set('config', $config);
         $view->set('javascript', $js);
-        $view->set('linkify', $form->getAttribute('linkify'));
     }
     
     /**
@@ -110,11 +108,11 @@ SCRIPT;
         self::$autoload = false;
         
         return array(
+            'class' => 'ckeditor',
             'config' => array(),
             'javascript' => true,
             'load_ckeditor' => $load,
             'kcfinder' => true,
-            'linkify' => true,
         );
     }
     
@@ -123,7 +121,7 @@ SCRIPT;
      */
     public function getParent(array $options)
     {
-        return 'textarea';
+        return 'editor';
     }
 
     /**
