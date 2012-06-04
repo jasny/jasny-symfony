@@ -32,6 +32,7 @@
 
 {% block ckeditor_widget %}
 {% spaceless %}
+    {% if class == 'ckeditor' %}{% set class = 'editor editor-html' %}{% endif %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
     {{ javascript|raw }}
 {% endspaceless %}
@@ -91,6 +92,13 @@
     <label><input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} /><span>&nbsp;{{ label|trans }}</span></label>
 {% endspaceless %}
 {% endblock radio_widget %}
+
+{% block country_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'data-provide': 'typeahead'}) %}
+    {{ block('choice_widget') }}
+{% endspaceless %}
+{% endblock country_widget %}
 
 {% block datetime_widget %}
 {% spaceless %}
@@ -183,6 +191,14 @@
 {% endspaceless %}
 {% endblock percent_widget %}
 
+{% block typeahead_widget %}
+{% spaceless %}
+    <input type="hidden" name="{{ full_name }}" value="{{ value }}" id="{{ id }}-value" />
+    {% set full_name = null %}
+    <input type="text" {{ block('widget_attributes') }} value="{{ text }}" data-target="#{{ id }}-value" />
+{% endspaceless %}
+{% endblock typeahead_widget %}
+
 {% block field_widget %}
 {% spaceless %}
     {% set type = type|default('text') %}
@@ -217,19 +233,27 @@
 
 {% block file_widget %}
 {% spaceless %}
-    <span class="btn btn-file">{% trans %}Select file{% endtrans %}{{ block('field_widget') }}</span>
+    <div class="fileupload fileupload-{{ exists ? 'exists' : 'new' }} {{ class }} {{ attr.class|default('') }}" {{ block('widget_container_attributes') }} data-fileupload="file">
+        <input type="hidden" name="{{ full_name }}" value="{{ filename }}" />
+        <div class="uneditable-input"><i class="iconic-document-alt fileupload-exists"></i> <span class="fileupload-preview">{% if exists %}{{ filename }}{% endif %}</span></div>
+        <span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" /></span>
+        <span class="btn btn-file"><i class="iconic-upload"></i> <span class="fileupload-new">{% trans %}Select image{% endtrans %}</span><span class="fileupload-exists">{% trans %}Change{% endtrans %}</span><input name="{{ full_name }}" type="file" /></span>
+        {% if not required %}<a href="#" class="btn fileupload-exists" data-dismiss="fileupload"><i class="iconic-x"></i> {% trans %}Remove{% endtrans %}</a>{% endif %}
+    </div>    
 {% endspaceless %}
 {% endblock file_widget %}
 
 {% block image_widget %}
-    <div class="fileupload fileupload-{{ exists ? 'exists' : 'new' }}" data-fileupload="image">
-        {#<input type="hidden" name="{{ full_name }}" value="" />#}
-        {% if default_preview %}<div class="fileupload-new"><img src="{{ default_preview }}" alt="{% trans %}No image selected{% endtrans %}" /></div>{% endif %}
-        <div class="fileupload-preview fileupload-exists"{% if preview_size %} data-style="max-width: {{ preview_size.width }}px; max-height: {{ preview_size.height }}px;"{% endif %}>
+    <div class="fileupload fileupload-{{ exists ? 'exists' : 'new' }} {{ class }} {{ attr.class|default('') }}" {{ block('widget_container_attributes') }} data-fileupload="image">
+        <input type="hidden" name="{{ full_name }}" value="{{ filename }}" />
+        {% if default_preview %}<div class="fileupload-new thumbnail"{% if preview_size %} style="{{ preview_size.max ? 'max-' : '' }}width: {{ preview_size.width }}px; {{ preview_size.max ? 'max-' : '' }}height: {{ preview_size.height }}px;"{% endif %}><img src="{{ default_preview }}" alt="{% trans %}No image selected{% endtrans %}" /></div>{% endif %}
+        <div class="fileupload-preview fileupload-exists thumbnail"{% if preview_size %} style="{{ preview_size.max ? 'max-' : '' }}width: {{ preview_size.width }}px; {{ preview_size.max ? 'max-' : '' }}height: {{ preview_size.height }}px;"{% endif %}>
             {% if preview %}<img src="{{ preview }}"{% if preview_size %} style="max-width: {{ preview_size.width }}px; max-height: {{ preview_size.height }}px;"{% endif %} />{% endif %}
         </div>
-        <span class="btn btn-file"><i class="iconic-upload"></i> <span class="fileupload-new">{% trans %}Select image{% endtrans %}</span><span class="fileupload-exists">{% trans %}Change{% endtrans %}</span>{{ block('field_widget') }}</span>
-        {% if not required %}<a href="#" class="btn fileupload-exists" data-dismiss="fileupload"><i class="iconic-x"></i> {% trans %}Remove{% endtrans %}</a>{% endif %}
+        <div class="fileupload-controls">
+            <span class="btn btn-file"><i class="iconic-upload"></i> <span class="fileupload-new">{% trans %}Select image{% endtrans %}</span><span class="fileupload-exists">{% trans %}Change{% endtrans %}</span><input name="{{ full_name }}" type="file" /></span>
+            {% if not required %}<a href="#" class="btn fileupload-exists" data-dismiss="fileupload"><i class="iconic-x"></i> {% trans %}Remove{% endtrans %}</a>{% endif %}
+        </div>
     </div>
 {% endblock image_widget %}
 
@@ -238,7 +262,7 @@
 {% block generic_label %}
 {% spaceless %}
     {% if label != '-' %}
-        <label {% if attr.for is defined %}for="{{attr.for}}"{% endif %}>{{ label|trans }}</label>
+        <label class="control-label" {% if attr.for is defined %}for="{{attr.for}}"{% endif %}>{{ label|trans }}</label>
     {% endif %}
 {% endspaceless %}
 {% endblock %}
@@ -266,10 +290,10 @@
 
 {% block field_row %}
 {% spaceless %}
-    <fieldset class="control-group {% if required %}required{% endif %} {% if form.get('errors') is not empty %}error{% endif %}">
+    <fieldset {{ block('row_attributes') }}>
         {% if checked is not defined %}{{ form_label(form, label|default(null)) }}{% endif %}
         <div class="controls">
-            {{ form_widget(form) }}
+            {{ form_widget(form, {'attr': attr}) }}
             {{ form_errors(form) }}
         </div>
     </fieldset>
@@ -323,7 +347,7 @@
 
 {% block widget_attributes %}
 {% spaceless %}
-    id="{{ id }}" name="{{ full_name }}"{% if class or attr.class is defined %} class="{{ class }} {{ attr.class|default('') }}"{% endif %}{% if read_only %} disabled="disabled"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if required %} required="required"{% endif %}
+    id="{{ id }}"{% if full_name %}name="{{ full_name }}"{% endif %}{% if class or attr.class is defined %} class="{{ class }} {{ attr.class|default('') }}"{% endif %}{% if read_only %} disabled="disabled"{% endif %}{% if max_length %} maxlength="{{ max_length }}"{% endif %}{% if required %} required="required"{% endif %}
     {% if pattern %} pattern="{{ pattern }}"{% endif %}{% if placeholder %} placeholder="{{ placeholder }}"{% endif %}{% if inputmask %} data-inputmask="{{ inputmask }}"{% endif %}
     {% for attrname,attrvalue in attr if attrname != 'class' %}{{attrname}}="{{attrvalue}}" {% endfor %}
 {% endspaceless %}
@@ -332,6 +356,15 @@
 {% block widget_container_attributes %}
 {% spaceless %}
     id="{{ id }}"
-    {% for attrname,attrvalue in attr %}{{attrname}}="{{attrvalue}}" {% endfor %}
+    {% for attrname,attrvalue in attr if attrname != 'class' %}{{attrname}}="{{attrvalue}}" {% endfor %}
 {% endspaceless %}
 {% endblock widget_container_attributes %}
+
+{% block row_attributes %}
+{% spaceless %}
+    class="control-group {% if required %}required{% endif %} {% if form.get('errors') is not empty %}error{% endif %} {% if attr.row is defined %}{{ attr.row.class|default('') }}{% endif %}"
+    {% if attr.row is defined %}
+        {% for attrname,attrvalue in attr.row if attrname != 'class' %}{{attrname}}="{{attrvalue}}" {% endfor %}
+    {% endif %}
+{% endspaceless %}
+{% endblock row_attributes %}

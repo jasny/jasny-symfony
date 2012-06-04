@@ -26,7 +26,7 @@ class FieldType extends BaseType
         parent::buildForm($builder, $options);
         
         $builder
-            ->setAttribute('class', $options['class'])
+            ->setAttribute('classname', $options['classname'])
             ->setAttribute('placeholder', $options['placeholder'])
             ->setAttribute('inputmask', $options['inputmask'])
         ;
@@ -40,7 +40,7 @@ class FieldType extends BaseType
         parent::buildView($view, $form);
         
         $view
-            ->set('class', join(" ", (array)$form->getAttribute('class')))
+            ->set('class', join(" ", (array)$form->getAttribute('classname')))
             ->set('placeholder', $form->getAttribute('placeholder'))
             ->set('inputmask', $form->getAttribute('inputmask'))
         ;
@@ -52,7 +52,7 @@ class FieldType extends BaseType
     public function getDefaultOptions(array $options)
     {
         return array(
-            'class' => '',
+            'classname' => '',
             'required' => false,
             'placeholder' => null,
             'inputmask' => null,

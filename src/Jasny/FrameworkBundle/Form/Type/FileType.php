@@ -43,21 +43,21 @@ class FileType extends BaseType
         $view->set('exists', false);
         
         $value = $view->get('value');
-        if (!$value) return;
+        if (empty($value)) return;
 
         if ($value instanceof FileBinding) {
             $view->set('filebinding', $value);
             if ($value->exists()) {
                 $view->set('exists', true);
                 $view->set('url', $value->getAsset());
-                $view->set('filename', $value->getFile()->getBasename());
+                $view->set('filename', $value->getFilename());
             }
         } elseif ($value instanceof File) {
             $view->set('exists', true);
             $view->set('filename', $value->getBasename());
             
             $root = rtrim($_SERVER['DOCUMENT_ROOT'], '/');
-            $path = $file->getPathname();
+            $path = $value->getPathname();
             if (substr($path, 0, strlen($root) + 1) != $_SERVER['DOCUMENT_ROOT'] . '/') $view->set('url', substr($path, strlen($root) + 1));
         }
     }

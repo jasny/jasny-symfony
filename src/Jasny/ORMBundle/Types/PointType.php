@@ -10,7 +10,7 @@
 
 namespace Jasny\ORMBundle\Types;
 
-use Jasny\ORM\Property\Point;
+use Jasny\ORMBundle\Properties\Point;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 

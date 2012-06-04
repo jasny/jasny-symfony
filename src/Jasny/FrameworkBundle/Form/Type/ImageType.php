@@ -47,8 +47,8 @@ class ImageType extends AbstractType
     public function buildView(FormView $view, FormInterface $form)
     {
         $size = $form->getAttribute('preview_size');
-        $view->set('preview', $view->get('filebinding') ? $view->get('filebinding')->getAsset(is_string($size) ? $size : null) : $view->get('url'));
-        $view->set('preview_size', $size && preg_match('/(\d+)x(\d+)/', $size, $match) ? array("width" => $match[1], "height" => $match[2]) : null);
+        $view->set('preview', $view->get('filebinding') ? $view->get('filebinding')->getAsset($size ? preg_replace('/.*?(\d+x\d+.*)$/', '$1', $size) : null) : $view->get('url'));
+        $view->set('preview_size', $size && preg_match('/(max)?\W*(\d+)x(\d+)/', $size, $match) ? array("max" => (boolean)$match[1], "width" => $match[2], "height" => $match[3]) : null);
         
         $default = $form->getAttribute('default_preview');
         if ($default) $default = $this->assets_helper->getUrl($default);

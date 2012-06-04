@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormView;
 
 
-class EditorType extends AbstractType
+class LinkType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -25,6 +25,7 @@ class EditorType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->setAttribute('linkify', $options['linkify']);
+        $builder->setAttribute('multiple', $options['multiple']);
     }
     
     /**
@@ -33,9 +34,10 @@ class EditorType extends AbstractType
     public function buildView(FormView $view, FormInterface $form)
     {
         $linkify = $form->getAttribute('linkify');
-        if ($linkify && !is_array($linkify)) $linkify = array();
-        $linkify += array('protocols' => array('http', 'mail'), 'attr' => array(), 'mode' => 'normal');
+        $linkify += array('protocols' => array('http', 'mail'), 'attr' => array(), 'mode' => 'all');
         $view->set('linkify', $linkify);
+        
+        $view->set('multiple', $form->getAttribute('multiple'));
     }
     
     /**
@@ -44,8 +46,8 @@ class EditorType extends AbstractType
     public function getDefaultOptions(array $options)
     {
         return array(
-            'classname' => 'editor',
-            'linkify' => true,
+            'linkify' => array(),
+            'multiple' => false,
         );
     }
 
@@ -54,7 +56,7 @@ class EditorType extends AbstractType
      */
     public function getParent(array $options)
     {
-        return 'textarea';
+        return $options['multiple'] ? 'textarea' : 'text';
     }
 
     /**
@@ -62,6 +64,6 @@ class EditorType extends AbstractType
      */
     public function getName()
     {
-        return 'editor';
+        return 'link';
     }
 }

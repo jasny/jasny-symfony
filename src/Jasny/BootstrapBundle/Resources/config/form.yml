@@ -1,0 +1,6 @@
+services:
+    form.type.typeahead:
+        class: Jasny\BootstrapBundle\Form\Type\TypeAheadType
+        arguments: ['@doctrine']
+        tags:
+            - { name: form.type, alias: typeahead }

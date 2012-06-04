@@ -37,7 +37,7 @@ class FileBinding implements Persistable
      */
     protected $replacement;
     
-    public $prefixSupported = false;
+    public $prefixSupported = true;
 
     /**
      * Create an File object for an entity.
@@ -147,6 +147,19 @@ class FileBinding implements Persistable
     }
     
     /**
+     * Return the name of the file.
+     * 
+     * If the file is being replaced, return the replacement filename.
+     * 
+     * @return string
+     */
+    public function getFilename()
+    {
+        if (isset($this->replacement)) return $this->replacement->getBasename() ?: null;
+        return $this->getName();
+    }
+    
+    /**
      * Check if the file exists.
      * 
      * @return boolean
@@ -170,18 +183,23 @@ class FileBinding implements Persistable
         $name = $this->getName();
         if (!isset($name)) return null;
         
-        return $this->getDirname() . "/" . (isset($prefix) && $this->prefixSupported ? preg_replace('~(^.*/)~', "\\1{$prefix}.", $name) : $name);
+        return $this->getDirname() . "/" . (isset($prefix) && $this->prefixSupported ? preg_replace('~(^.*/)~', '${1}' . $prefix . '.', $name) : $name);
     }
 
     /**
      * Get link as asset, ideal for twig.
-     * Returns null if the file does not exists (in contrary to getLink)
+     * Returns a link to the replacement if set and returns null if the file does not exists
      * 
      * @param string $prefix
      * @return string
      */
     public function getAsset($prefix=null, $version=true)
     {
+        if ($this->replacement) {
+            if (substr($this->replacement->getPathname(), 0, strlen($_SERVER['DOCUMENT_ROOT'])) != $_SERVER['DOCUMENT_ROOT']) return null;
+            return substr($this->replacement->getPathname(), strlen($_SERVER['DOCUMENT_ROOT']) - 1) . ($version ? '?v=' . substr(filemtime($this->getFile()), -5) : '');
+        }
+        
         if (!$this->exists()) return null;
         
         global $kernel;
@@ -202,7 +220,12 @@ class FileBinding implements Persistable
     {
         if (!$file instanceof File) return $this->setReplacement($file);
         
-        $this->replacement = $file->move($this->getPath(),  'tmp.' . md5(microtime()) . '.' . $file->guessExtension());
+        if (substr($file->getPath(), 0, strlen($_SERVER['DOCUMENT_ROOT'])) == $_SERVER['DOCUMENT_ROOT']) {
+            $this->replacement = $file;
+        } else {
+            $this->replacement = $file->move($this->getPath(),  'tmp.' . md5(microtime()) . '.' . $file->guessExtension());
+        }
+        
         return $this;
     }
     
@@ -220,18 +243,20 @@ class FileBinding implements Persistable
      * Set unpersisted uploaded file.
      * Fluent interface
      * 
-     * @param string $file  File object or filename
+     * @param string $file  Filename
      * @return File
      */
     public function setReplacement($filename)
     {
-        if (!$filename) {
+        if ($filename == $this->name) return;
+        
+        if (empty($filename)) {
             // Delete
             $this->replacement = 0;
         } else {
             // Replace
-            if (strpos('..', $dirname) !== false || !preg_match('/^tmp\.\d{32}\./', $filename)) throw new \Exception("Illegal replacement filename '$filename'");
-            $this->replacement = $filename;
+            if (strpos('..', $filename) !== false || !preg_match('/^tmp\.\d{32}\./', $filename)) throw new \Exception("Illegal replacement filename '$filename'");
+            $this->replacement = new File($this->getPath() . '/' . $filename);
         }
         
         $this->name = null;
@@ -292,10 +317,17 @@ class FileBinding implements Persistable
         if ($this->id != $id) $this->id = $id;
         $this->name = $this->determineName();
         
-        // Rename replacement file
+        // Move or copy replacement file
         if ($this->replacement) {
             $file = new File($this->getPath() . '/' . $this->getName(), false);
-            $this->replacement->move($file->getPath(), $file->getBasename());
+            
+            if (preg_match('/^tmp\.\d{32}\./', $this->replacement->getBasename())) {
+                $this->replacement->move($file->getPath(), $file->getBasename());
+            } else {
+                if (!file_exists($file->getPath())) mkdir($file->getPath(), 0775, true);
+                copy($this->replacement->getPathname(), $file->getPathname());
+            }
+            
             $this->replacement = null;
         }
     }

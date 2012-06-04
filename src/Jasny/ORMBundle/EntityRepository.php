@@ -94,21 +94,13 @@ class EntityRepository extends DoctrineRepository
      * Finds an entity by its primary key or reference.
      *
      * @param $id The identifier or reference.
-     * @param int $lockMode
-     * @param int $lockVersion
      * @return object The entity.
-     * 
-     * @todo Support locking for Referenceable
      */
-    public function find($id, $lockMode = LockMode::NONE, $lockVersion = null)
+    public function load($id)
     {
-        // Standard behaviour
-        if (!isset($this->reference_field)) {
-            return parent::find($id, $lockMode, $lockVersion);
-        }
-        
-        // Find by reference
-        return parent::findOneBy(array($this->reference_field => $id));
+        return isset($this->reference_field) ?
+            parent::findOneBy(array($this->reference_field => $id)) :
+            $this->find($id, $lockMode, $lockVersion);
     }
     
     /**

@@ -13,6 +13,7 @@ namespace Jasny\ORMBundle\Services;
 
 use Jasny\ORMBundle\Properties\Persistable;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\Common\EventSubscriber;
 
 /**
@@ -68,8 +69,6 @@ class PropertyPersister implements EventSubscriber
      */
 	protected function persistProperties($entity)
 	{
-        var_dump('HERE');
-        
         // We're walking through all public and private properties, not using getters
         foreach ((array)$entity as $value) {
             if ($value instanceof Persistable) {

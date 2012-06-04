@@ -108,7 +108,7 @@ SCRIPT;
         self::$autoload = false;
         
         return array(
-            'class' => 'ckeditor',
+            'classname' => 'ckeditor',
             'config' => array(),
             'javascript' => true,
             'load_ckeditor' => $load,

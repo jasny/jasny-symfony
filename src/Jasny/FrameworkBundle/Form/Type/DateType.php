@@ -31,7 +31,8 @@ class DateType extends BaseType
         
         $builder->setAttribute('inputmask', $options['inputmask'] === true ? preg_replace('/\w/', '9', $pattern) : $options['inputmask']);
         $builder->setAttribute('placeholder', $options['placeholder'] === true ? $pattern : $options['placeholder']);
-
+        $builder->setAttribute('pattern', null);
+        
         parent::buildForm($builder, $options);
     }
 

@@ -1,0 +1,11 @@
+parameters:
+    jasny_browser.class: Jasny\BrowserBundle\Services\BrowserDetector
+    
+services:
+    browser:
+        class: %jasny_browser.class%
+    twig.extension.browser:
+        class: Jasny\BrowserBundle\Twig\BrowserExtension
+        arguments: ['@browser']
+        tags:
+            - { name: twig.extension }

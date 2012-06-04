@@ -19,6 +19,10 @@ services:
         class: Jasny\FrameworkBundle\Form\Type\EditorType
         tags:
             - { name: form.type, alias: editor }
+    form.type.link:
+        class: Jasny\FrameworkBundle\Form\Type\LinkType
+        tags:
+            - { name: form.type, alias: link }
     form.type.phonenumber:
         class: Jasny\FrameworkBundle\Form\Type\PhonenumberType
         tags:

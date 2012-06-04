@@ -35,18 +35,14 @@ The ORM bundle adds much functionality to Doctrine ORM:
 * A unique reference (slug) is automatically set for entities that implement the `AutoReferencing` interface.
 * Easily store an uploaded file for the entity with `FileBinding`.
 
-Newly generated entites will use the extended repository manager from the ORM bundle, supporting `Referenceable` and order by for `findOneBy` as well as adding methods
-`FindFirst` and `count`.
+Newly generated entites will use the extended repository manager from the ORM bundle, supporting order by for `findOneBy` as well as adding methods
+`load`, `findFirst` and `count`.
 
 
 Forms
 -----
 
-The Framework bundle comes with an extended form base class and a customized twig form view, to enable more features:
-
-* By default the HTML5 form validation is disabled. This can be enabled with form option 'html-validation'. *TODO*
-* Each form has an attribute 'mode', which is set to either 'new' or 'edit'. *TODO*
-* A form is marked 'dirty' when values are changed using bindRequest. *TODO*
+The Framework bundle comes with an extended form base class and a customized twig form view.
 
 ### Form types ###
 
@@ -57,6 +53,11 @@ Several form field types are added:
 * CKEditor        - CKEditor, including support for KCFinder (*yeah baby :D*)
 * AutoReference   - For automatically generated references (e.g. slugs) *TODO*
 * File            - Overwrites the way to basic symfony file type
+* Image           - Image type showing a thumbnail
+* Link            - A text input or textarea, that is shown as a link in uneditable mode
+* Phonenumber     - An input for phonenumbers (with icon prefix in Bootstrap)
+* Country         - A choice element with all the countries in the world
+* Typeahead       - A Bootstrap typeahead element with id > entity conversion
 
 
 Twig
@@ -81,7 +82,8 @@ This project comes with 2 sets of generators:
 * The Bootstrap generator employs the Twitter Bootstrap CSS library to create a clean and slick CRUD screens. *(See http://jasny.github.com/bootstrap)*
 * The vanilla generator creates a scaffold on which you can apply your own custom styling.
 
-Both generators have the option to create controllers, forms and views based on entities in another bundle. This allows for the creation of separate front and back office bundles.
+Both generators have the option to create controllers, forms and views based on entities in another bundle. This allows for the creation of separate
+front and back office bundles.
 
 ### Commands ###
 
@@ -99,6 +101,12 @@ You can easily create a custom CRUD generator.
 * Copy the 'Command' and 'Resources' directory from Jasny/VanillaBundle to your own bundle.
 * Modify the namespace and bundle name in both commands.
 * Change the skeleton and public files from the 'Resources' directory
+
+
+Browser detection
+-----------------
+
+The 'browser' service can be accessed to get information about the browser capabilities of the client. *(uses browscap: http://php.net/get-browser)*
 
 
 Bug tracker

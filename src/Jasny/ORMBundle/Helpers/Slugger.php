@@ -11,8 +11,6 @@
 
 namespace Jasny\ORMBundle\Helpers;
 
-use Jasny\ORMBundle\SluggerInterface;
-
 /**
  * Object Service that generates a slug based on incoming fields.
  * e.g. "My Test" will return "my-test" ("my-test-1" on duplicate)
@@ -56,8 +54,8 @@ class Slugger implements AutoReferenceGenerator
         $slug = join($this->glue, array_filter($parts));
         $slug = strtolower(preg_replace('~[^-\w]+~', '', self::convertToAscii($slug)));
 
-		// Fall-back to produce something (6 random letters)
-		if (!trim($slug)) $slug = base_convert(mt_rand(60466176, min(2176782335, mt_getrandmax())), 10, 36);
+		// Fall-back to produce something
+		if (!trim($slug)) $slug = uniqid();
 
 		// Append an index to the slug and see if we can generate a unique value
 		$loop = 1;

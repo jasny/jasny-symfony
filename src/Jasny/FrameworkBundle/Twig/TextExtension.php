@@ -111,10 +111,13 @@ class TextExtension extends \Twig_Extension
         foreach ((array)$protocols as $protocol) {
             switch ($protocol) {
                 case 'http':
-                case 'https':   $value = preg_replace_callback($mode != 'all' ? '~(?:(https?)://([^\s<>]+)|(www\.[^\s<>]+?\.[^\s<>]+))(?<![\.,:])~i' : '~(?:(https?)://([^\s<>]+)|([^\s<>]+?\.[^\s<>]+)(?<![\.,:]))~i', function ($match) use ($protocol, &$links, $attr) { if ($match[1]) $protocol = $match[1]; $link = $match[2] ?: $match[3]; return '<' . array_push($links, '<a' . $attr . ' href="' . $protocol . '://' . $link  . '">' . $link . '</a>') . '>'; }, $value); break;
-                case 'mail':    $value = preg_replace_callback('~([^\s<>]+?@[^\s<>]+?\.[^\s<>]+)(?<![\.,:])~', function ($match) use (&$links, $attr) { return '<' . array_push($links, '<a' . $attr . ' href="mailto:' . $match[1]  . '">' . $match[1] . '</a>') . '>'; }, $value); break;
+                case 'https':   $value = preg_replace_callback($mode != 'all' ? '~(?:(https?)://([^\s<>]+)|(www\.[^\s<>]+?\.[^\s<>]+))(?<![\.,:;\?!\'"\|])~i' : '~(?:(https?)://([^\s<>]+)|([^\s<>]+?\.[^\s<>]+)(?<![\.,:]))~i', function ($match) use ($protocol, &$links, $attr) { if ($match[1]) $protocol = $match[1]; $link = $match[2] ?: $match[3]; return '<' . array_push($links, '<a' . $attr . ' href="' . $protocol . '://' . $link  . '">' . rtrim($link, '/') . '</a>') . '>'; }, $value); break;
+                case 'mail':    $value = preg_replace_callback('~([^\s<>]+?@[^\s<>]+?\.[^\s<>]+)(?<![\.,:;\?!\'"\|])~', function ($match) use (&$links, $attr) { return '<' . array_push($links, '<a' . $attr . ' href="mailto:' . $match[1]  . '">' . $match[1] . '</a>') . '>'; }, $value); break;
                 case 'twitter': $value = preg_replace_callback('~(?<!\w)[@#](\w++)~', function ($match) use (&$links, $attr) { return '<' . array_push($links, '<a' . $attr . ' href="https://twitter.com/' . ($match[0][0] == '@' ? '' : 'search/%23') . $match[1]  . '">' . $match[0] . '</a>') . '>'; }, $value); break;
-                default:        $value = preg_replace_callback($mode != 'all' ? '~' . preg_quote($protocol, '~') . '://([^\s<>]+?)(?<![\.,:])~i' : '~([^\s<>]+)(?<![\.,:])~i', function ($match) use ($protocol, &$links, $attr) { return '<' . array_push($links, '<a' . $attr . ' href="' . $protocol . '://' . $match[1]  . '">' . $match[1] . '</a>') . '>'; }, $value); break;
+                
+                default:
+                    if (strpos($protocol, ':') === false) $protocol .= in_array($protocol, array('ftp', 'tftp', 'ssh', 'scp'))  ? '://' : ':';
+                    $value = preg_replace_callback($mode != 'all' ? '~' . preg_quote($protocol, '~') . '([^\s<>]+?)(?<![\.,:;\?!\'"\|])~i' : '~([^\s<>]+)(?<![\.,:])~i', function ($match) use ($protocol, &$links, $attr) { return '<' . array_push($links, '<a' . $attr . ' href="' . $protocol . $match[1]  . '">' . $match[1] . '</a>') . '>'; }, $value); break;
             }
         }
         
@@ -137,12 +140,14 @@ class TextExtension extends \Twig_Extension
     /**
      * Join array elements with a string (implode).
      * 
-     * @param array $value
+     * @param array  $value
      * @param string $glue
+     * @param boolean $filter
      * @return string
      */
-    public function join($value, $glue="\n")
+    public function join($value, $glue="\n", $filter=true)
     {
+        if ($filter) $value = array_filter($value);
         return join($glue, $value);
     }
     
