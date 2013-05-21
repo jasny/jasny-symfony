@@ -3,6 +3,8 @@ Jasny for Symfony
 
 This library is an extension to Symfony2. With the Jasny bundles, developers can create deployable applications extremely fast, *so they can go out to enjoy the sun :)*.
 
+__This library is no longer maintained.__
+
 
 Installation
 ------------
